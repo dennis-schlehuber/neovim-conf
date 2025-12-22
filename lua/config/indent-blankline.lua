@@ -1,11 +1,15 @@
--- indent-blankline configuration
+-- indent-blankline configuration (v3)
 
-require('indent_blankline').setup({
-  char = '│',
-  show_trailing_blankline_indent = false,
-  show_first_indent_level = true,
-  use_treesitter = true,
-  show_current_context = true,
-  show_current_context_start = true,
+require('ibl').setup({
+  indent = {
+    char = '│',
+  },
+  whitespace = {
+    remove_blankline_trail = false,
+  },
+  scope = {
+    enabled = true,
+    show_start = true,
+  },
 })
 
