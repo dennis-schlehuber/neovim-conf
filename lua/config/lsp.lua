@@ -71,7 +71,26 @@ vim.lsp.enable('gopls')
 vim.lsp.config.jdtls = {
   cmd = { 'jdtls' },
   filetypes = { 'java' },
-  root_markers = { '.project', '.classpath', 'pom.xml', 'build.gradle', '.git' },
+  root_markers = { '.project', '.classpath', 'pom.xml', 'build.gradle', 'build.gradle.kts', 'settings.gradle', '.git' },
+  settings = {
+    java = {
+      configuration = {
+        updateBuildConfiguration = 'automatic',
+      },
+      eclipse = {
+        downloadSources = true,
+      },
+      maven = {
+        downloadSources = true,
+      },
+      implementationsCodeLens = {
+        enabled = true,
+      },
+      referencesCodeLens = {
+        enabled = true,
+      },
+    },
+  },
 }
 vim.lsp.enable('jdtls')
 
@@ -79,7 +98,19 @@ vim.lsp.enable('jdtls')
 vim.lsp.config.kotlin_language_server = {
   cmd = { 'kotlin-language-server' },
   filetypes = { 'kotlin' },
-  root_markers = { 'build.gradle', 'build.gradle.kts', 'settings.gradle', '.git' },
+  root_markers = { 'build.gradle', 'build.gradle.kts', 'settings.gradle', 'pom.xml', '.git' },
+  settings = {
+    kotlin = {
+      compiler = {
+        jvm = {
+          target = 'default',
+        },
+      },
+      languageServer = {
+        enabled = true,
+      },
+    },
+  },
 }
 vim.lsp.enable('kotlin_language_server')
 
