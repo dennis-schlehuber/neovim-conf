@@ -193,6 +193,14 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Code formatter (Prettier support)
+  use {
+    'stevearc/conform.nvim',
+    config = function()
+      require('config.conform')
+    end
+  }
+
   -- Automatically set up your configuration after cloning packer.nvim
   if packer_bootstrap then
     require('packer').sync()
