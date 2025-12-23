@@ -2,6 +2,31 @@
 
 A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integration, and more.
 
+## Plugins and licenses
+
+- `wbthomason/packer.nvim` — MIT
+- `Isrothy/neominimap.nvim` — MIT (per upstream)
+- `rose-pine/neovim` — MIT
+- `joshdick/onedark.vim` — MIT
+- `nvim-telescope/telescope.nvim` — MIT
+- `nvim-lua/plenary.nvim` — MIT
+- `neovim/nvim-lspconfig` — Apache-2.0
+- `mbbill/undotree` — MIT
+- `lewis6991/gitsigns.nvim` — MIT
+- `hrsh7th/nvim-cmp` — MIT
+- `hrsh7th/cmp-nvim-lsp` — MIT
+- `hrsh7th/cmp-buffer` — MIT
+- `hrsh7th/cmp-path` — MIT
+- `L3MON4D3/LuaSnip` — Apache-2.0
+- `saadparwaiz1/cmp_luasnip` — MIT
+- `nvim-tree/nvim-tree.lua` — MIT
+- `nvim-tree/nvim-web-devicons` — MIT
+- `windwp/nvim-autopairs` — MIT
+- `lukas-reineke/indent-blankline.nvim` — MIT
+- `rcarriga/nvim-notify` — MIT
+- `nvim-lualine/lualine.nvim` — MIT
+- `stevearc/conform.nvim` — MIT
+
 ## Prerequisites
 
 ### Required
@@ -78,6 +103,7 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 ### 🔍 File Navigation
 
 - **Telescope** fuzzy finder with:
+  - `<leader>ff` - Search text in files (live grep)
   - `<leader>pf` - Find files (searches from project directory)
   - `<leader>pg` - Git files
   - `<leader>pws` - Search word under cursor
@@ -143,6 +169,7 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 - `<leader>e` - Toggle nvim-tree file explorer
 - `<leader>pf` - Find files (Telescope)
 - `<leader>pg` - Git files (Telescope)
+- `<leader>ff` - Search text in files (Telescope live grep)
 
 ### Search
 
@@ -150,6 +177,7 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 - `<leader>pWs` - Search WORD under cursor
 - `<leader>ps` - Interactive grep search
 - `<leader>vh` - Help tags
+- `<leader>bb` - Switch buffers
 
 ### Git
 
