@@ -5,6 +5,10 @@ require('nvim-tree').setup({
   view = {
     width = 30,
   },
+  update_focused_file = {
+    enable = true,
+    update_root = false, -- set true if you want root to change
+  },
   renderer = {
     group_empty = true,
     icons = {
