@@ -110,6 +110,9 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- OneDark colorscheme (optional alternative)
+  use 'joshdick/onedark.vim'
+
   -- Telescope (fuzzy finder)
   use {
     'nvim-telescope/telescope.nvim',

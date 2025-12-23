@@ -62,7 +62,10 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 
 ### 🎨 Appearance
 
-- **Rose Pine** colorscheme with auto dark/light mode detection
+- **Rose Pine** colorscheme with auto dark/light mode detection (default)
+- **OneDark** colorscheme (optional alternative)
+  - Switch to OneDark: `:colorscheme onedark`
+  - Switch back to Rose Pine: `:colorscheme rose-pine`
 - **Lualine** status bar showing:
   - Current mode
   - Git branch and diff status
