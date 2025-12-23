@@ -29,6 +29,11 @@ local function get_project_dir()
 end
 
 -- Keymaps
+vim.keymap.set('n', '<leader>ff', function()
+    builtin.live_grep({
+        cwd = get_project_dir(),
+    })
+end, { desc = 'Find text in files' })
 vim.keymap.set('n', '<leader>pf', function()
     builtin.find_files({
         cwd = get_project_dir(),

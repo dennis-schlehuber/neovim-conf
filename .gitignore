@@ -38,6 +38,7 @@ $RECYCLE.BIN/
 .directory
 .Trash-*
 .nfs*
+plugin/packer_compiled.lua
 
 # Neovim
 *.swp
