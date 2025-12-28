@@ -7,8 +7,7 @@ require('plugins')
 -- Load set configuration
 require('config.set')
 
--- Load LSP configuration
-require('config.lsp')
+-- LSP configuration is loaded via plugins.lua (nvim-lspconfig config function)
 
 -- Load telescope configuration
 require('config.telescope')
