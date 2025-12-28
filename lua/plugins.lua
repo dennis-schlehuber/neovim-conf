@@ -154,6 +154,14 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- File outline (symbols sidebar)
+  use {
+    'stevearc/aerial.nvim',
+    config = function()
+      require('config.aerial')
+    end
+  }
+
   -- Automatically set up your configuration after cloning packer.nvim
   if packer_bootstrap then
     require('packer').sync()
