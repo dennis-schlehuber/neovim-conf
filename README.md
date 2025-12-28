@@ -123,10 +123,10 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
   - Java (jdtls)
   - Kotlin (kotlin_language_server)
 - **LSP Keymaps**:
-  - `gd` - Go to definition
-  - `gD` - Go to declaration
+  - `<leader>gd` - Go to definition
+  - `<leader>gD` - Go to declaration
   - `K` - Hover documentation
-  - `gi` - Go to implementation
+  - `<leader>gi` - Go to implementation
   - `<C-k>` - Signature help
   - `<leader>D` - Type definition
   - `<leader>rn` - Rename symbol
