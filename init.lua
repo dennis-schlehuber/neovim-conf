@@ -12,4 +12,6 @@ require('config.set')
 -- Load telescope configuration
 require('config.telescope')
 
-
+-- Load treesitter configuration
+require('config.treesitter')
+vim.opt.guicursor = "i:ver25"
