@@ -20,32 +20,30 @@ return require('packer').startup(function(use)
   -- Minimap
   use 'Isrothy/neominimap.nvim'
 
-  -- Colorscheme - TokyoNight
+  -- Colorscheme - Catppuccin
   use {
-    'folke/tokyonight.nvim',
+    'catppuccin/nvim',
+    as = 'catppuccin',
     config = function()
-      require("tokyonight").setup({
-        style = "storm", -- The theme comes in three styles, `storm`, `night` and `day`
-        light_style = "day", -- The theme is used when the background is set to light
-        transparent = false, -- Enable this to disable setting the background color
-        terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
-        styles = {
-          -- Style to be applied to different syntax groups
-          comments = { italic = true },
-          keywords = { italic = true },
-          functions = {},
-          variables = {},
-          -- Background styles. Can be "dark", "transparent" or "normal"
-          sidebars = "dark", -- style for sidebars, see below
-          floats = "dark", -- style for floating windows
+      require("catppuccin").setup({
+        flavour = "frappe", -- latte, frappe, macchiato, mocha
+        transparent_background = false,
+        term_colors = true,
+        integrations = {
+          lualine = true,
+          nvimtree = true,
+          treesitter = true,
         },
-        dim_inactive = false, -- dims inactive windows
-        lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
       })
 
       -- Load the colorscheme
-      vim.cmd("colorscheme tokyonight-storm")
+      vim.cmd("colorscheme catppuccin-frappe")
     end
+  }
+
+  -- TokyoNight colorscheme (optional alternative)
+  use {
+    'folke/tokyonight.nvim',
   }
 
   -- Rose Pine colorscheme (optional alternative)
@@ -167,4 +165,3 @@ return require('packer').startup(function(use)
     require('packer').sync()
   end
 end)
-
