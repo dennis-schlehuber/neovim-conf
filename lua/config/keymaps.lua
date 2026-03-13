@@ -2,6 +2,12 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Window navigation
+vim.keymap.set('n', '<leader><Left>', '<C-w>h', { desc = 'Move to left window' })
+vim.keymap.set('n', '<leader><Right>', '<C-w>l', { desc = 'Move to right window' })
+vim.keymap.set('n', '<leader><Up>', '<C-w>k', { desc = 'Move to upper window' })
+vim.keymap.set('n', '<leader><Down>', '<C-w>j', { desc = 'Move to lower window' })
+
 -- File explorer
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Open file explorer" })
 

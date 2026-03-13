@@ -11,6 +11,7 @@ require('conform').setup({
     css = { 'prettier' },
     scss = { 'prettier' },
     html = { 'prettier' },
+    svelte = { 'prettier' },
     markdown = { 'prettier' },
     yaml = { 'prettier' },
     lua = { 'stylua' },

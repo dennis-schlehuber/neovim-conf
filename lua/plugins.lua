@@ -58,7 +58,6 @@ return require('packer').startup(function(use)
   -- Telescope (fuzzy finder)
   use {
     'nvim-telescope/telescope.nvim',
-    tag = "0.1.5",
     requires = { {'nvim-lua/plenary.nvim'} },
     config = function()
       require('config.telescope')
@@ -157,6 +156,34 @@ return require('packer').startup(function(use)
     'stevearc/aerial.nvim',
     config = function()
       require('config.aerial')
+    end
+  }
+
+  -- Syntax highlighting
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    config = function()
+      require('config.treesitter')
+    end
+  }
+
+  -- Git integration
+  use 'tpope/vim-fugitive'
+
+  -- LLM autocompletion
+  use {
+    'supermaven-inc/supermaven-nvim',
+    config = function()
+      require('config.supermaven')
+    end
+  }
+
+  -- Keybinding popup helper
+  use {
+    'folke/which-key.nvim',
+    config = function()
+      require('config.which-key')
     end
   }
 

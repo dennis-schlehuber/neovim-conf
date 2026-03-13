@@ -4,6 +4,7 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 
 ## Plugins and licenses
 
+- `tpope/vim-fugitive` — MIT
 - `wbthomason/packer.nvim` — MIT
 - `Isrothy/neominimap.nvim` — MIT (per upstream)
 - `rose-pine/neovim` — MIT
@@ -42,10 +43,23 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 
 - **Language Servers** - Install the language servers you need:
 
-  - **Go**: `gopls` - `go install golang.org/x/tools/gopls@latest`
-  - **Java**: `jdtls` - Eclipse JDT Language Server
-  - **Kotlin**: `kotlin-language-server` - Install via your package manager
   - **TypeScript/JavaScript**: `typescript-language-server` (see above)
+  - **Python**:
+    ```bash
+    npm install -g pyright
+    ```
+  - **HTML + CSS** (bundled together):
+    ```bash
+    npm install -g vscode-langservers-extracted
+    ```
+  - **Svelte**:
+    ```bash
+    npm install -g svelte-language-server
+    ```
+  - **Go**: `gopls` - `go install golang.org/x/tools/gopls@latest`
+  - **Java**: `jdtls` - `brew install jdtls`
+  - **Kotlin**: `kotlin-language-server` - Install via your package manager
+  - **XML**: `lemminx` - Download binary from [GitHub releases](https://github.com/eclipse/lemminx/releases) and place it in your PATH
 
 - **Tree-sitter CLI** (optional but recommended) - For better syntax highlighting
 
@@ -146,6 +160,24 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
   - `<leader>u` - Toggle undotree
 
 ### 📝 Git Integration
+
+- **Fugitive** - Full git integration:
+  - `:Git` - Open interactive git status buffer
+  - `:Git add %` - Stage current file
+  - `:Git commit` - Commit (opens commit message editor)
+  - `:Git push` - Push to remote
+  - `:Git pull` - Pull from remote
+  - `:Git checkout -b my-branch` - Create and switch to new branch
+  - `:Git checkout branch-name` - Switch branch
+  - `:Git log` - View commit log
+  - `:Git diff` - View unstaged changes
+  - `:Git blame` - Toggle inline blame for current file
+  - Inside `:Git` status buffer:
+    - `s` - Stage file/hunk under cursor
+    - `u` - Unstage file/hunk
+    - `cc` - Commit staged changes
+    - `=` - Toggle inline diff for file
+    - `Enter` - Open file
 
 - **Gitsigns** - Inline git blame and signs:
   - Shows git blame information at the end of lines
