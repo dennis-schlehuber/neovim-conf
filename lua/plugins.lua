@@ -33,6 +33,10 @@ return require('packer').startup(function(use)
           lualine = true,
           nvimtree = true,
           treesitter = true,
+          nvim_dap = true,
+          nvim_dap_ui = true,
+          bufferline = true,
+          trouble = true,
         },
       })
 
@@ -184,6 +188,71 @@ return require('packer').startup(function(use)
     'folke/which-key.nvim',
     config = function()
       require('config.which-key')
+    end
+  }
+
+  -- DAP (Debugger)
+  use {
+    'mfussenegger/nvim-dap',
+    requires = {
+      'nvim-neotest/nvim-nio',
+      'rcarriga/nvim-dap-ui',
+      'theHamsta/nvim-dap-virtual-text',
+    },
+    config = function()
+      require('config.dap')
+    end
+  }
+
+  -- Linter
+  use {
+    'mfussenegger/nvim-lint',
+    config = function()
+      require('config.lint')
+    end
+  }
+
+  -- Fast navigation
+  use {
+    'folke/flash.nvim',
+    config = function()
+      require('config.flash')
+    end
+  }
+
+  -- Floating terminal + lazygit
+  use {
+    'akinsho/toggleterm.nvim',
+    tag = '*',
+    config = function()
+      require('config.toggleterm')
+    end
+  }
+
+  -- Buffer tab bar
+  use {
+    'akinsho/bufferline.nvim',
+    tag = '*',
+    requires = 'nvim-tree/nvim-web-devicons',
+    config = function()
+      require('config.bufferline')
+    end
+  }
+
+  -- Diagnostics panel
+  use {
+    'folke/trouble.nvim',
+    requires = 'nvim-tree/nvim-web-devicons',
+    config = function()
+      require('config.trouble')
+    end
+  }
+
+  -- Session persistence (restore buffers between nvim restarts)
+  use {
+    'folke/persistence.nvim',
+    config = function()
+      require('config.persistence')
     end
   }
 
