@@ -144,8 +144,14 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
   - `<C-k>` - Signature help
   - `<leader>D` - Type definition
   - `<leader>rn` - Rename symbol
-  - `<leader>ca` - Code actions
+  - `<leader>,` - Code actions
   - `gr` - Find references
+- **Diagnostics**:
+  - `<leader>.` - Show diagnostic at cursor (float)
+  - `<leader>t` - Toggle Trouble (workspace diagnostics)
+  - `<leader>df` - Trouble file diagnostics
+  - `[d` / `]d` - Jump to previous/next diagnostic
+  - `[q` / `]q` - Jump between Trouble items
 - **nvim-cmp** autocompletion with:
   - LSP completions
   - Buffer completions
@@ -218,20 +224,30 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 
 ### LSP
 
-- `gd` - Go to definition
-- `gD` - Go to declaration
-- `K` - Hover
-- `gi` - Go to implementation
+- `<leader>gd` - Go to definition
+- `<leader>gD` - Go to declaration
+- `K` - Hover documentation
+- `<leader>gi` - Go to implementation
 - `<C-k>` - Signature help
 - `<leader>D` - Type definition
 - `<leader>rn` - Rename
-- `<leader>ca` - Code actions
-- `gr` - References
+- `<leader>,` - Code actions
+- `grr` - References
+
+### Diagnostics
+
+- `<leader>.` - Show diagnostic at cursor (float)
+- `<leader>t` - Toggle Trouble (workspace diagnostics)
+- `<leader>df` - Trouble file diagnostics
+- `[d` / `]d` - Jump to previous/next diagnostic
+- `[q` / `]q` - Jump between Trouble items
 
 ### Other
 
 - `<leader>u` - Toggle undotree
-- `<leader>p` (in visual mode) - Paste without overwriting register
+- `<leader>o` - Toggle file outline (Aerial)
+- `<leader>gg` - Toggle Lazygit
+- `<leader>p` (visual) - Paste without overwriting register
 
 ## Configuration Structure
 
