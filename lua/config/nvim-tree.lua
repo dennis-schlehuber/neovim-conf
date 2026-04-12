@@ -28,6 +28,16 @@ require('nvim-tree').setup({
   },
 })
 
+-- Always start with the tree closed, even if session restores it
+vim.api.nvim_create_autocmd('VimEnter', {
+  once = true,
+  callback = function()
+    vim.schedule(function()
+      require('nvim-tree.api').tree.close()
+    end)
+  end,
+})
+
 -- Keymap to toggle nvim-tree
 vim.keymap.set('n', '<leader>e', function()
   require('nvim-tree.api').tree.toggle()

@@ -1,15 +1,13 @@
--- Load keymaps
+-- Load keymaps (must come before plugins so leader key is set)
 require('config.keymaps')
 
--- Load plugins
+-- Bootstrap lazy.nvim and load plugins
 require('plugins')
 
 -- Load set configuration
 require('config.set')
 
 -- LSP configuration is loaded via plugins.lua (nvim-lspconfig config function)
-
--- Load telescope configuration
-require('config.telescope')
+-- Telescope configuration is loaded via plugins.lua (telescope config function)
 
 vim.opt.guicursor = "i:ver25"

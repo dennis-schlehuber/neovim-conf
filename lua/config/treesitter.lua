@@ -3,7 +3,7 @@
 
 -- nvim-treesitter stores queries under runtime/queries/ but Neovim only adds
 -- the plugin root to rtp. Add the runtime subdir so query lookups work.
-vim.opt.rtp:prepend(vim.fn.stdpath('data') .. '/site/pack/packer/start/nvim-treesitter/runtime')
+vim.opt.rtp:prepend(vim.fn.stdpath('data') .. '/lazy/nvim-treesitter/runtime')
 
 -- Schedule async installation of all required parsers on startup
 require('nvim-treesitter').install({

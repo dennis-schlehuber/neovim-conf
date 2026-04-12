@@ -1,29 +1,27 @@
--- Packer bootstrap
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.uv.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
-local packer_bootstrap = ensure_packer()
-
--- Packer configuration
-return require('packer').startup(function(use)
-  -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
+require("lazy").setup({
 
   -- Minimap
-  use 'Isrothy/neominimap.nvim'
+  "Isrothy/neominimap.nvim",
 
-  -- Colorscheme - Catppuccin
-  use {
-    'catppuccin/nvim',
-    as = 'catppuccin',
+  -- Colorscheme - Catppuccin (load first so UI is styled before other plugins init)
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
     config = function()
       require("catppuccin").setup({
         flavour = "frappe", -- latte, frappe, macchiato, mocha
@@ -39,225 +37,211 @@ return require('packer').startup(function(use)
           trouble = true,
         },
       })
-
-      -- Load the colorscheme
       vim.cmd("colorscheme catppuccin-frappe")
-    end
-  }
+    end,
+  },
 
   -- TokyoNight colorscheme (optional alternative)
-  use {
-    'folke/tokyonight.nvim',
-  }
+  "folke/tokyonight.nvim",
 
   -- Rose Pine colorscheme (optional alternative)
-  use {
-    'rose-pine/neovim',
-    as = 'rose-pine',
-  }
+  { "rose-pine/neovim", name = "rose-pine" },
 
   -- OneDark colorscheme (optional alternative)
-  use 'joshdick/onedark.vim'
+  "joshdick/onedark.vim",
 
   -- Telescope (fuzzy finder)
-  use {
-    'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} },
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require('config.telescope')
-    end
-  }
+      require("config.telescope")
+    end,
+  },
 
   -- LSP Configuration
-  use {
-    'neovim/nvim-lspconfig',
+  {
+    "neovim/nvim-lspconfig",
     config = function()
-      require('config.lsp')
-    end
-  }
+      require("config.lsp")
+    end,
+  },
 
   -- Undotree
-  use 'mbbill/undotree'
+  "mbbill/undotree",
 
   -- Git signs (inline git blame)
-  use {
-    'lewis6991/gitsigns.nvim',
+  {
+    "lewis6991/gitsigns.nvim",
     config = function()
-      require('config.gitsigns')
-    end
-  }
+      require("config.gitsigns")
+    end,
+  },
 
   -- Autocompletion
-  use {
-    'hrsh7th/nvim-cmp',
-    requires = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-cmdline',
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
     },
     config = function()
-      require('config.cmp')
-    end
-  }
+      require("config.cmp")
+    end,
+  },
 
   -- File explorer
-  use {
-    'nvim-tree/nvim-tree.lua',
-    requires = {
-      'nvim-tree/nvim-web-devicons',
-    },
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require('config.nvim-tree')
-    end
-  }
+      require("config.nvim-tree")
+    end,
+  },
 
   -- Auto-pairs
-  use {
-    'windwp/nvim-autopairs',
+  {
+    "windwp/nvim-autopairs",
     config = function()
-      require('config.autopairs')
-    end
-  }
+      require("config.autopairs")
+    end,
+  },
 
   -- Indentation guides
-  use {
-    'lukas-reineke/indent-blankline.nvim',
+  {
+    "lukas-reineke/indent-blankline.nvim",
     config = function()
-      require('config.indent-blankline')
-    end
-  }
+      require("config.indent-blankline")
+    end,
+  },
 
   -- Better notifications
-  use {
-    'rcarriga/nvim-notify',
+  {
+    "rcarriga/nvim-notify",
     config = function()
-      require('config.notify')
-    end
-  }
+      require("config.notify")
+    end,
+  },
 
   -- Status line
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = { 'nvim-tree/nvim-web-devicons', opt = true },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require('config.lualine')
-    end
-  }
+      require("config.lualine")
+    end,
+  },
 
   -- Code formatter (Prettier support)
-  use {
-    'stevearc/conform.nvim',
+  {
+    "stevearc/conform.nvim",
     config = function()
-      require('config.conform')
-    end
-  }
+      require("config.conform")
+    end,
+  },
 
   -- File outline (symbols sidebar)
-  use {
-    'stevearc/aerial.nvim',
+  {
+    "stevearc/aerial.nvim",
     config = function()
-      require('config.aerial')
-    end
-  }
+      require("config.aerial")
+    end,
+  },
 
   -- Syntax highlighting
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
     config = function()
-      require('config.treesitter')
-    end
-  }
+      require("config.treesitter")
+    end,
+  },
 
   -- Git integration
-  use 'tpope/vim-fugitive'
+  "tpope/vim-fugitive",
 
   -- LLM autocompletion
-  use {
-    'supermaven-inc/supermaven-nvim',
+  {
+    "supermaven-inc/supermaven-nvim",
     config = function()
-      require('config.supermaven')
-    end
-  }
+      require("config.supermaven")
+    end,
+  },
 
   -- Keybinding popup helper
-  use {
-    'folke/which-key.nvim',
+  {
+    "folke/which-key.nvim",
     config = function()
-      require('config.which-key')
-    end
-  }
+      require("config.which-key")
+    end,
+  },
 
   -- DAP (Debugger)
-  use {
-    'mfussenegger/nvim-dap',
-    requires = {
-      'nvim-neotest/nvim-nio',
-      'rcarriga/nvim-dap-ui',
-      'theHamsta/nvim-dap-virtual-text',
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "rcarriga/nvim-dap-ui",
+      "theHamsta/nvim-dap-virtual-text",
     },
     config = function()
-      require('config.dap')
-    end
-  }
+      require("config.dap")
+    end,
+  },
 
   -- Linter
-  use {
-    'mfussenegger/nvim-lint',
+  {
+    "mfussenegger/nvim-lint",
     config = function()
-      require('config.lint')
-    end
-  }
+      require("config.lint")
+    end,
+  },
 
   -- Fast navigation
-  use {
-    'folke/flash.nvim',
+  {
+    "folke/flash.nvim",
     config = function()
-      require('config.flash')
-    end
-  }
+      require("config.flash")
+    end,
+  },
 
   -- Floating terminal + lazygit
-  use {
-    'akinsho/toggleterm.nvim',
-    tag = '*',
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
     config = function()
-      require('config.toggleterm')
-    end
-  }
+      require("config.toggleterm")
+    end,
+  },
 
   -- Buffer tab bar
-  use {
-    'akinsho/bufferline.nvim',
-    tag = '*',
-    requires = 'nvim-tree/nvim-web-devicons',
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require('config.bufferline')
-    end
-  }
+      require("config.bufferline")
+    end,
+  },
 
   -- Diagnostics panel
-  use {
-    'folke/trouble.nvim',
-    requires = 'nvim-tree/nvim-web-devicons',
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require('config.trouble')
-    end
-  }
+      require("config.trouble")
+    end,
+  },
 
   -- Session persistence (restore buffers between nvim restarts)
-  use {
-    'folke/persistence.nvim',
+  {
+    "folke/persistence.nvim",
     config = function()
-      require('config.persistence')
-    end
-  }
-
-  -- Automatically set up your configuration after cloning packer.nvim
-  if packer_bootstrap then
-    require('packer').sync()
-  end
-end)
+      require("config.persistence")
+    end,
+  },
+})
