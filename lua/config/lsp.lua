@@ -14,6 +14,10 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>gd', function()
     require('telescope.builtin').lsp_definitions()
   end, vim.tbl_extend('force', bufopts, { desc = 'Go to definition' }))
+
+  vim.keymap.set('n', '<leader>cc', function()
+    require('telescope.builtin').lsp_definitions()
+  end, vim.tbl_extend('force', bufopts, { desc = 'Go to definition (tag jump)' }))
   
   vim.keymap.set('n', '<leader>gi', function()
     require('telescope.builtin').lsp_implementations()
