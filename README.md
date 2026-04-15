@@ -197,57 +197,163 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
 
 ## Keymaps
 
-### Leader Key
+Leader key: `<Space>`
 
-- Leader key is set to `<Space>` (spacebar)
+### Windows
 
-### File Operations
+| Key | Action |
+|-----|--------|
+| `<leader><Left>` | Move to left window |
+| `<leader><Right>` | Move to right window |
+| `<leader><Up>` | Move to upper window |
+| `<leader><Down>` | Move to lower window |
 
-- `<leader>pv` - Open file explorer (netrw)
-- `<leader>e` - Toggle nvim-tree file explorer
-- `<leader>pf` - Find files (Telescope)
-- `<leader>pg` - Git files (Telescope)
-- `<leader>ff` - Search text in files (Telescope live grep)
+### File Explorer
 
-### Search
+| Key | Action |
+|-----|--------|
+| `<leader>pv` | Open netrw file explorer |
+| `<leader>e` | Toggle nvim-tree file explorer |
 
-- `<leader>pws` - Search word under cursor
-- `<leader>pWs` - Search WORD under cursor
-- `<leader>ps` - Interactive grep search
-- `<leader>vh` - Help tags
-- `<leader>bb` - Switch buffers
+### Search & Navigation (Telescope)
 
-### Git
+| Key | Action |
+|-----|--------|
+| `<leader>ff` | Live grep (search text in files) |
+| `<leader>pf` | Find files |
+| `<leader>pg` | Git files |
+| `<leader>pws` | Search word under cursor |
+| `<leader>pWs` | Search WORD under cursor |
+| `<leader>ps` | Interactive grep search |
+| `<leader>bb` | Switch buffers |
+| `<leader>vh` | Help tags |
 
-- Git information is shown in the status bar (branch, diff status)
-- Inline git blame appears at the end of lines
+### Buffers
+
+| Key | Action |
+|-----|--------|
+| `<S-h>` | Previous buffer |
+| `<S-l>` | Next buffer |
+| `<leader>1`–`<leader>9` | Jump to buffer by position |
+| `<leader>bd` | Close buffer |
+| `<leader>bp` | Pin buffer |
+| `<leader>bP` | Close all unpinned buffers |
 
 ### LSP
 
-- `<leader>gd` - Go to definition
-- `<leader>gD` - Go to declaration
-- `K` - Hover documentation
-- `<leader>gi` - Go to implementation
-- `<C-k>` - Signature help
-- `<leader>D` - Type definition
-- `<leader>rn` - Rename
-- `<leader>,` - Code actions
-- `grr` - References
+| Key | Action |
+|-----|--------|
+| `<leader>gd` | Go to definition |
+| `<leader>gD` | Go to declaration |
+| `<leader>gi` | Go to implementation |
+| `<leader>D` | Go to type definition |
+| `<leader>cc` | Go to definition (tag-jump style) |
+| `grr` | Find references |
+| `K` | Hover documentation |
+| `<C-k>` | Signature help |
+| `<leader>rn` | Rename symbol |
+| `<leader>,` | Code action (normal & visual) |
+| `<leader>f` | Format buffer |
 
-### Diagnostics
+**Telescope LSP pickers** (always available, even without an active LSP session):
 
-- `<leader>.` - Show diagnostic at cursor (float)
-- `<leader>t` - Toggle Trouble (workspace diagnostics)
-- `<leader>df` - Trouble file diagnostics
-- `[d` / `]d` - Jump to previous/next diagnostic
-- `[q` / `]q` - Jump between Trouble items
+| Key | Action |
+|-----|--------|
+| `<leader>lr` | LSP references |
+| `<leader>ld` | LSP definitions |
+| `<leader>li` | LSP implementations |
+| `<leader>lt` | LSP type definitions |
+| `<leader>ls` | LSP document symbols |
+| `<leader>lS` | LSP workspace symbols |
 
-### Other
+### Diagnostics & Trouble
 
-- `<leader>u` - Toggle undotree
-- `<leader>o` - Toggle file outline (Aerial)
-- `<leader>gg` - Toggle Lazygit
-- `<leader>p` (visual) - Paste without overwriting register
+| Key | Action |
+|-----|--------|
+| `<leader>.` | Show diagnostic float at cursor |
+| `[d` / `]d` | Previous / next diagnostic |
+| `<leader>t` | Toggle Trouble (workspace diagnostics) |
+| `<leader>dq` | Toggle Trouble workspace diagnostics |
+| `<leader>df` | Toggle Trouble file diagnostics |
+| `<leader>ds` | Toggle Trouble document symbols |
+| `<leader>dl` | Toggle Trouble location list |
+| `<leader>dx` | Toggle Trouble quickfix |
+| `[q` / `]q` | Previous / next Trouble item |
+
+### Formatting & Linting
+
+| Key | Action |
+|-----|--------|
+| `<leader>f` | Format code (normal & visual, via conform.nvim) |
+| `<leader>cl` | Run linter manually |
+
+### Git
+
+| Key | Action |
+|-----|--------|
+| `<leader>gg` | Toggle Lazygit floating window |
+
+Fugitive commands are invoked via `:Git <subcommand>` (`:Git`, `:Git commit`, `:Git push`, etc.).
+
+### Debugging (DAP)
+
+| Key | Action |
+|-----|--------|
+| `<leader>dc` | Continue / start session |
+| `<leader>di` | Step into |
+| `<leader>dn` | Step over |
+| `<leader>dO` | Step out |
+| `<leader>db` | Toggle breakpoint |
+| `<leader>dB` | Conditional breakpoint |
+| `<leader>dt` | Terminate session |
+| `<leader>dr` | Open REPL |
+| `<leader>du` | Toggle DAP UI |
+
+### Terminal
+
+| Key | Action |
+|-----|--------|
+| `<C-\>` | Toggle floating terminal |
+| `<Esc>` *(terminal)* | Exit terminal mode |
+| `<C-h/j/k/l>` *(terminal)* | Navigate to adjacent window |
+
+### Flash (Motion)
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `s` | n/x/o | Jump to any location |
+| `S` | n/x/o | Treesitter node select |
+| `r` | o | Remote action |
+| `R` | o/x | Treesitter search |
+| `<C-s>` | c | Toggle flash in `/` search |
+
+### Sessions
+
+| Key | Action |
+|-----|--------|
+| `<leader>qs` | Restore session for cwd |
+| `<leader>qS` | Select session to restore |
+| `<leader>ql` | Restore last session |
+| `<leader>qw` | Save session now |
+| `<leader>qd` | Stop auto-saving session |
+
+### Editing
+
+| Key | Action |
+|-----|--------|
+| `<leader>u` | Toggle undotree |
+| `<leader>o` | Toggle file outline (Aerial) |
+| `<leader>p` *(visual)* | Paste without overwriting register |
+
+### Completion (insert mode)
+
+| Key | Action |
+|-----|--------|
+| `<Tab>` / `<S-Tab>` | Next / previous completion item or snippet jump |
+| `<CR>` | Confirm completion |
+| `<C-Space>` | Trigger completion |
+| `<C-e>` | Abort completion |
+| `<C-b>` / `<C-f>` | Scroll docs up / down |
 
 ## Configuration Structure
 
