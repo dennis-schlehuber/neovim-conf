@@ -95,7 +95,15 @@ vim.lsp.config('kotlin_language_server', {
 })
 
 -- Java
+local lombok_jar = vim.fn.expand('~/.local/share/jdtls/lombok.jar')
+local jdtls_cmd = { 'jdtls' }
+if vim.fn.filereadable(lombok_jar) == 1 then
+  table.insert(jdtls_cmd, '--jvm-arg=-javaagent:' .. lombok_jar)
+  table.insert(jdtls_cmd, '--jvm-arg=-Xbootclasspath/a:' .. lombok_jar)
+end
+
 vim.lsp.config('jdtls', {
+  cmd = jdtls_cmd,
   settings = {
     java = {
       configuration = {
@@ -106,6 +114,32 @@ vim.lsp.config('jdtls', {
       },
       maven = {
         downloadSources = true,
+      },
+      -- Lombok: allow annotation processors
+      autobuild = { enabled = true },
+      signatureHelp = { enabled = true },
+      contentProvider = { preferred = 'fernflower' },
+      sources = {
+        organizeImports = {
+          starThreshold = 9999,
+          staticStarThreshold = 9999,
+        },
+      },
+    },
+  },
+})
+
+-- Spring Boot Language Server
+vim.lsp.config('spring_boot', {
+  cmd = { 'spring-boot-language-server' },
+  filetypes = { 'java', 'kotlin' },
+  root_markers = { 'pom.xml', 'build.gradle', 'build.gradle.kts', '.git' },
+  settings = {
+    spring_boot = {
+      ls = {
+        problem = {
+          application_properties = { other = { SHOW = 'WARNING' } },
+        },
       },
     },
   },
@@ -140,13 +174,14 @@ vim.lsp.config('pyright', {
 
 -- Enable all configured language servers
 -- These will auto-start when you open files of the appropriate type
-vim.lsp.enable('ts_ls')        -- TypeScript/JavaScript/React
+vim.lsp.enable('ts_ls')                   -- TypeScript/JavaScript/React
 vim.lsp.enable('kotlin_language_server')  -- Kotlin
-vim.lsp.enable('jdtls')        -- Java
-vim.lsp.enable('svelte')       -- Svelte
-vim.lsp.enable('gopls')        -- Go
-vim.lsp.enable('lemminx')      -- XML
-vim.lsp.enable('html')         -- HTML
-vim.lsp.enable('cssls')        -- CSS
-vim.lsp.enable('pyright')      -- Python
+vim.lsp.enable('jdtls')                   -- Java (with Lombok)
+vim.lsp.enable('spring_boot')             -- Spring Boot (Java/Kotlin)
+vim.lsp.enable('svelte')                  -- Svelte
+vim.lsp.enable('gopls')                   -- Go
+vim.lsp.enable('lemminx')                 -- XML
+vim.lsp.enable('html')                    -- HTML
+vim.lsp.enable('cssls')                   -- CSS
+vim.lsp.enable('pyright')                 -- Python
 

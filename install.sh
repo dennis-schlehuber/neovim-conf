@@ -57,6 +57,7 @@ else
   npm_global pyright                                 # python
   npm_global prettier                                # formatter (conform.nvim)
   npm_global eslint                                  # linter   (nvim-lint)
+  npm_global tree-sitter-cli                         # treesitter parser builder
 fi
 
 # ── Go — gopls ────────────────────────────────────────────────────────────────
@@ -119,6 +120,55 @@ if [ ${#AUR_PKGS[@]} -gt 0 ]; then
     paru -S --needed "${AUR_PKGS[@]}"
   else
     warn "No AUR helper found (yay/paru). Install manually from AUR: ${AUR_PKGS[*]}"
+  fi
+fi
+
+# ── Java / Kotlin — Spring Boot + Lombok ─────────────────────────────────────
+title "Java/Kotlin — Spring Boot + Lombok"
+
+JDTLS_DATA="$HOME/.local/share/jdtls"
+mkdir -p "$JDTLS_DATA"
+
+# lombok.jar — enables Lombok annotation processing in jdtls
+LOMBOK_JAR="$JDTLS_DATA/lombok.jar"
+if [[ -f "$LOMBOK_JAR" ]]; then
+  ok "lombok.jar already present: $LOMBOK_JAR"
+else
+  if has curl; then
+    info "Downloading lombok.jar…"
+    curl -fsSL "https://projectlombok.org/downloads/lombok.jar" -o "$LOMBOK_JAR"
+    ok "lombok.jar → $LOMBOK_JAR"
+  else
+    warn "curl not found — skipping lombok.jar download."
+    warn "Download manually: https://projectlombok.org/downloads/lombok.jar → $LOMBOK_JAR"
+  fi
+fi
+
+# spring-boot-language-server — Spring Boot LSP (from STS4 GitHub releases)
+SPRING_BOOT_DIR="$HOME/.local/share/spring-boot-language-server"
+SPRING_BOOT_BIN="/usr/local/bin/spring-boot-language-server"
+if has spring-boot-language-server; then
+  ok "spring-boot-language-server already in PATH"
+elif [[ -d "$SPRING_BOOT_DIR" ]]; then
+  ok "spring-boot-language-server already installed at $SPRING_BOOT_DIR"
+else
+  if has curl; then
+    info "Downloading spring-boot-language-server (latest STS4 release)…"
+    STS4_VERSION=$(curl -fsSL "https://api.github.com/repos/spring-projects/sts4/releases/latest" \
+      | grep '"tag_name"' | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/')
+    STS4_VERSION_NUM="${STS4_VERSION#v}"
+    STS4_URL="https://github.com/spring-projects/sts4/releases/download/${STS4_VERSION}/spring-boot-language-server-${STS4_VERSION_NUM}.tar.gz"
+    TMP_STS=$(mktemp -d)
+    curl -fsSL "$STS4_URL" -o "$TMP_STS/spring-boot-ls.tar.gz"
+    tar -xzf "$TMP_STS/spring-boot-ls.tar.gz" -C "$TMP_STS"
+    mv "$TMP_STS/spring-boot-language-server" "$SPRING_BOOT_DIR"
+    chmod +x "$SPRING_BOOT_DIR/bin/spring-boot-language-server"
+    ln -sf "$SPRING_BOOT_DIR/bin/spring-boot-language-server" "$SPRING_BOOT_BIN"
+    rm -rf "$TMP_STS"
+    ok "spring-boot-language-server → $SPRING_BOOT_BIN"
+  else
+    warn "curl not found — skipping spring-boot-language-server download."
+    warn "Download manually from: https://github.com/spring-projects/sts4/releases"
   fi
 fi
 
