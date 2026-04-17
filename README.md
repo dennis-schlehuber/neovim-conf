@@ -120,7 +120,7 @@ A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integr
   - `<leader>ff` - Search text in files (live grep)
   - `<leader>pf` - Find files (searches from project directory)
   - `<leader>pg` - Git files
-  - `<leader>pws` - Search word under cursor
+  - `<leader>pws` / `<leader>sw` - Search word under cursor
   - `<leader>pWs` - Search WORD under cursor
   - `<leader>ps` - Interactive grep search
   - `<leader>vh` - Help tags
@@ -222,7 +222,7 @@ Leader key: `<Space>`
 | `<leader>ff` | Live grep (search text in files) |
 | `<leader>pf` | Find files |
 | `<leader>pg` | Git files |
-| `<leader>pws` | Search word under cursor |
+| `<leader>pws` / `<leader>sw` | Search word under cursor |
 | `<leader>pWs` | Search WORD under cursor |
 | `<leader>ps` | Interactive grep search |
 | `<leader>bb` | Switch buffers |
