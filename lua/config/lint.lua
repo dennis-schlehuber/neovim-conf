@@ -1,5 +1,20 @@
 local lint = require('lint')
 
+-- Use the venv Python if available (uv projects use .venv), otherwise fall back to system python3
+local pylint = lint.linters.pylint
+table.insert(pylint.args, 1, 'pylint')
+table.insert(pylint.args, 1, '-m')
+pylint.cmd = function()
+  local venv = vim.fn.finddir('.venv', vim.fn.getcwd() .. ';')
+  if venv ~= '' then
+    local venv_python = venv .. '/bin/python3'
+    if vim.fn.executable(venv_python) == 1 then
+      return venv_python
+    end
+  end
+  return 'python3'
+end
+
 lint.linters_by_ft = {
   javascript      = { 'eslint' },
   typescript      = { 'eslint' },

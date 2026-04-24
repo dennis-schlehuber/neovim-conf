@@ -162,6 +162,15 @@ vim.lsp.config('cssls', {})
 
 -- Python
 vim.lsp.config('pyright', {
+  before_init = function(_, config)
+    local venv = vim.fn.finddir('.venv', vim.fn.getcwd() .. ';')
+    if venv ~= '' then
+      local python = vim.fn.resolve(venv .. '/bin/python3')
+      if vim.fn.executable(python) == 1 then
+        config.settings.python.pythonPath = python
+      end
+    end
+  end,
   settings = {
     python = {
       analysis = {

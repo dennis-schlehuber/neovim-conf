@@ -4,6 +4,16 @@ require('telescope').setup({
   defaults = {
     file_ignore_patterns = {},
     path_display = { "smart" },
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case',
+      '--hidden',
+    },
   },
 })
 
@@ -37,7 +47,7 @@ end, { desc = 'Find text in files' })
 vim.keymap.set('n', '<leader>pf', function()
     builtin.find_files({
         cwd = get_project_dir(),
-        hidden = false,
+        hidden = true,
         no_ignore = false,
     })
 end, { desc = 'Find files' })
