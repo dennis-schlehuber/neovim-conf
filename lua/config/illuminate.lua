@@ -1,4 +1,4 @@
-require('illuminate').setup({
+require('illuminate').configure({
   providers = { 'lsp', 'treesitter', 'regex' },
   delay = 200,
   filetypes_denylist = { 'neo-tree', 'aerial', 'toggleterm', 'trouble', 'TelescopePrompt' },

@@ -34,14 +34,10 @@ vim.opt.clipboard = "unnamedplus"
 
 vim.opt.colorcolumn = "80"
 
--- Inline diagnostic virtual text
 vim.diagnostic.config({
-  virtual_text = {
-    prefix = '●',
-    source = 'if_many', -- show source only when multiple LSPs active
-  },
-  signs = true,
-  underline = true,
+  virtual_text    = false, -- handled by tiny-inline-diagnostic
+  signs           = true,
+  underline       = true,
   update_in_insert = false,
-  severity_sort = true,
+  severity_sort   = true,
 })

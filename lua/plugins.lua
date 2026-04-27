@@ -38,6 +38,7 @@ require("lazy").setup({
           navic = { enabled = true },
           indent_blankline = { enabled = true },
           illuminate = true,
+          todo_comments = true,
         },
       })
       vim.cmd("colorscheme catppuccin-frappe")
@@ -157,6 +158,41 @@ require("lazy").setup({
     "karb94/neoscroll.nvim",
     config = function()
       require("config.neoscroll")
+    end,
+  },
+
+  -- TODO/FIXME/NOTE comment highlighting
+  {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("config.todo-comments")
+    end,
+  },
+
+  -- LSP progress spinner
+  {
+    "j-hui/fidget.nvim",
+    config = function()
+      require("config.fidget")
+    end,
+  },
+
+  -- Scrollbar with git/diagnostic markers
+  {
+    "petertriho/nvim-scrollbar",
+    dependencies = { "lewis6991/gitsigns.nvim" },
+    config = function()
+      require("config.scrollbar")
+    end,
+  },
+
+  -- Better inline diagnostics
+  {
+    "rachartier/tiny-inline-diagnostic.nvim",
+    priority = 1000,
+    config = function()
+      require("config.tiny-inline-diagnostic")
     end,
   },
 
