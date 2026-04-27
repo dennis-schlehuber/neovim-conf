@@ -29,12 +29,15 @@ require("lazy").setup({
         term_colors = true,
         integrations = {
           lualine = true,
-          nvimtree = true,
+          neotree = true,
           treesitter = true,
           nvim_dap = true,
           nvim_dap_ui = true,
-          bufferline = true,
           trouble = true,
+          noice = true,
+          navic = { enabled = true },
+          indent_blankline = { enabled = true },
+          illuminate = true,
         },
       })
       vim.cmd("colorscheme catppuccin-frappe")
@@ -96,10 +99,15 @@ require("lazy").setup({
 
   -- File explorer
   {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
     config = function()
-      require("config.nvim-tree")
+      require("config.neo-tree")
     end,
   },
 
@@ -130,9 +138,70 @@ require("lazy").setup({
   -- Status line
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "nvim-tree/nvim-web-devicons", "SmiteshP/nvim-navic" },
     config = function()
       require("config.lualine")
+    end,
+  },
+
+  -- Breadcrumbs
+  {
+    "SmiteshP/nvim-navic",
+    config = function()
+      require("config.navic")
+    end,
+  },
+
+  -- Smooth scrolling
+  {
+    "karb94/neoscroll.nvim",
+    config = function()
+      require("config.neoscroll")
+    end,
+  },
+
+  -- Modern UI (cmdline, messages, notifications)
+  {
+    "folke/noice.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("config.noice")
+    end,
+  },
+
+  -- Word occurrence highlighting
+  {
+    "RRethy/vim-illuminate",
+    config = function()
+      require("config.illuminate")
+    end,
+  },
+
+  -- Better input/select UI
+  {
+    "stevearc/dressing.nvim",
+    config = function()
+      require("config.dressing")
+    end,
+  },
+
+  -- Better code folding with virtual text
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async" },
+    config = function()
+      require("config.ufo")
+    end,
+  },
+
+  -- Inline color preview
+  {
+    "NvChad/nvim-colorizer.lua",
+    config = function()
+      require("config.colorizer")
     end,
   },
 
@@ -218,15 +287,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Buffer tab bar
-  {
-    "akinsho/bufferline.nvim",
-    version = "*",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("config.bufferline")
-    end,
-  },
 
   -- Diagnostics panel
   {

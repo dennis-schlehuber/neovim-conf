@@ -2,6 +2,11 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Buffer navigation
+vim.keymap.set('n', '<S-h>', '<cmd>bprev<CR>', { desc = 'Buffer: Previous' })
+vim.keymap.set('n', '<S-l>', '<cmd>bnext<CR>', { desc = 'Buffer: Next' })
+vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<CR>', { desc = 'Buffer: Close' })
+
 -- Window navigation
 vim.keymap.set('n', '<leader><Left>', '<C-w>h', { desc = 'Move to left window' })
 vim.keymap.set('n', '<leader><Right>', '<C-w>l', { desc = 'Move to right window' })

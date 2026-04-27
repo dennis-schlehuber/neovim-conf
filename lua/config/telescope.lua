@@ -19,23 +19,13 @@ require('telescope').setup({
 
 local builtin = require('telescope.builtin')
 
--- Helper function to get the project directory
+-- Helper function to get the project directory (git root, or cwd as fallback)
 local function get_project_dir()
-    -- If there's a file open, use its directory
-    local current_file = vim.fn.expand('%:p')
-    if current_file and current_file ~= '' then
-        return vim.fn.expand('%:p:h')
-    end
-    -- Otherwise, check if a path was passed as argument
-    local argv = vim.fn.argv(0)
-    if argv and argv ~= '' then
-        local path = vim.fn.fnamemodify(argv, ':p:h')
-        if vim.fn.isdirectory(path) == 1 then
-            return path
-        end
-    end
-    -- Fall back to current working directory
-    return vim.fn.getcwd()
+  local git_root = vim.fn.system('git -C ' .. vim.fn.shellescape(vim.fn.getcwd()) .. ' rev-parse --show-toplevel 2>/dev/null'):gsub('\n', '')
+  if git_root ~= '' and not git_root:find('fatal:') then
+    return git_root
+  end
+  return vim.fn.getcwd()
 end
 
 -- Keymaps

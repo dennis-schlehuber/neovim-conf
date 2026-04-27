@@ -2,6 +2,9 @@ require('persistence').setup({
   dir = vim.fn.stdpath('state') .. '/sessions/',
   need = 1,      -- minimum number of buffers to save a session
   branch = true, -- use git branch in session name (separate session per branch)
+  pre_save = function()
+    pcall(vim.cmd, 'Neotree close')
+  end,
 })
 
 -- Auto-restore session when nvim is opened with no file arguments,
@@ -32,3 +35,13 @@ map('<leader>qs', function() require('persistence').load() end,                '
 map('<leader>qS', function() require('persistence').select() end,              'Session: Select to restore')
 map('<leader>ql', function() require('persistence').load({ last = true }) end, 'Session: Restore last')
 map('<leader>qd', function() require('persistence').stop() end,                'Session: Stop saving')
+map('<leader>qD', function()
+  local path = require('persistence').get()
+  if path and vim.fn.filereadable(path) == 1 then
+    os.remove(path)
+    require('persistence').stop()
+    vim.notify('Session deleted', vim.log.levels.INFO, { title = 'Session' })
+  else
+    vim.notify('No session for current directory', vim.log.levels.WARN, { title = 'Session' })
+  end
+end, 'Session: Delete')

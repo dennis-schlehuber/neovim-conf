@@ -3,16 +3,16 @@
 require('lualine').setup({
   options = {
     icons_enabled = true,
-    theme = 'tokyonight',
+    theme = 'catppuccin',
     component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
     disabled_filetypes = {
       statusline = {},
-      winbar = {},
+      winbar = { 'neo-tree', 'toggleterm', 'aerial', 'trouble', 'dap-repl' },
     },
     ignore_focus = {},
     always_divide_middle = true,
-    globalstatus = false,
+    globalstatus = true,
     refresh = {
       statusline = 1000,
       tabline = 1000,
@@ -36,7 +36,17 @@ require('lualine').setup({
     lualine_z = {}
   },
   tabline = {},
-  winbar = {},
+  winbar = {
+    lualine_c = {
+      {
+        function() return require('nvim-navic').get_location() end,
+        cond = function()
+          local ok, navic = pcall(require, 'nvim-navic')
+          return ok and navic.is_available()
+        end,
+      },
+    },
+  },
   inactive_winbar = {},
   extensions = {}
 })
