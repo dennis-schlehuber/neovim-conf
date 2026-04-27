@@ -3,7 +3,7 @@
 -- Common on_attach function for LSP keymaps
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
   -- Mappings
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -43,12 +43,6 @@ local on_attach = function(client, bufnr)
     require('telescope.builtin').lsp_references()
   end, vim.tbl_extend('force', bufopts, { desc = 'Find references' }))
   
-  -- Formatting
-  if client.supports_method('textDocument/formatting') then
-    vim.keymap.set('n', '<leader>f', function()
-      vim.lsp.buf.format({ async = true })
-    end, vim.tbl_extend('force', bufopts, { desc = 'Format buffer' }))
-  end
 end
 
 -- Set up LspAttach autocommand to apply on_attach for all servers

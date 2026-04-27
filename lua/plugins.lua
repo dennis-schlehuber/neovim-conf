@@ -297,11 +297,4 @@ require("lazy").setup({
     end,
   },
 
-  -- Session persistence (restore buffers between nvim restarts)
-  {
-    "folke/persistence.nvim",
-    config = function()
-      require("config.persistence")
-    end,
-  },
 })
