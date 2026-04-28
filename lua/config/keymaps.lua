@@ -44,6 +44,7 @@ local function safe_telescope_keymap(key, func_name, desc)
 end
 
 safe_telescope_keymap('<leader>lr', 'lsp_references', 'LSP: References')
+safe_telescope_keymap('<leader>ll', 'lsp_references', 'LSP: References')
 safe_telescope_keymap('<leader>ld', 'lsp_definitions', 'LSP: Definitions')
 safe_telescope_keymap('<leader>li', 'lsp_implementations', 'LSP: Implementations')
 safe_telescope_keymap('<leader>lt', 'lsp_type_definitions', 'LSP: Type definitions')

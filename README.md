@@ -1,203 +1,167 @@
 # Neovim Configuration
 
-A modern Neovim v0.11+ configuration with LSP support, fuzzy finding, git integration, and more.
+A modern Neovim v0.11+ configuration with LSP, fuzzy finding, git integration, and a Zed-inspired UI.
 
 ## Plugins and licenses
 
-- `tpope/vim-fugitive` — MIT
-- `wbthomason/packer.nvim` — MIT
-- `Isrothy/neominimap.nvim` — MIT (per upstream)
-- `rose-pine/neovim` — MIT
-- `joshdick/onedark.vim` — MIT
-- `nvim-telescope/telescope.nvim` — MIT
+**Package manager**
+- `folke/lazy.nvim` — Apache-2.0
+
+**Appearance**
+- `catppuccin/nvim` — MIT
+- `folke/tokyonight.nvim` — MIT *(alternative)*
+- `rose-pine/neovim` — MIT *(alternative)*
+- `joshdick/onedark.vim` — MIT *(alternative)*
+- `nvim-lualine/lualine.nvim` — MIT
+- `lukas-reineke/indent-blankline.nvim` — MIT
+- `rcarriga/nvim-notify` — MIT
+- `folke/noice.nvim` — Apache-2.0
+- `MunifTanjim/nui.nvim` — MIT
+- `SmiteshP/nvim-navic` — Apache-2.0
+- `petertriho/nvim-scrollbar` — MIT
+- `rachartier/tiny-inline-diagnostic.nvim` — MIT
+- `NvChad/nvim-colorizer.lua` — MIT
+- `RRethy/vim-illuminate` — MIT
+- `folke/todo-comments.nvim` — Apache-2.0
+- `karb94/neoscroll.nvim` — MIT
+
+**File management**
+- `nvim-neo-tree/neo-tree.nvim` — MIT
+- `nvim-tree/nvim-web-devicons` — MIT
 - `nvim-lua/plenary.nvim` — MIT
+
+**Navigation**
+- `nvim-telescope/telescope.nvim` — MIT
+- `folke/flash.nvim` — Apache-2.0
+
+**LSP & completion**
 - `neovim/nvim-lspconfig` — Apache-2.0
-- `mbbill/undotree` — MIT
-- `lewis6991/gitsigns.nvim` — MIT
 - `hrsh7th/nvim-cmp` — MIT
 - `hrsh7th/cmp-nvim-lsp` — MIT
 - `hrsh7th/cmp-buffer` — MIT
 - `hrsh7th/cmp-path` — MIT
+- `hrsh7th/cmp-cmdline` — MIT
 - `L3MON4D3/LuaSnip` — Apache-2.0
 - `saadparwaiz1/cmp_luasnip` — MIT
-- `nvim-tree/nvim-tree.lua` — MIT
-- `nvim-tree/nvim-web-devicons` — MIT
-- `windwp/nvim-autopairs` — MIT
-- `lukas-reineke/indent-blankline.nvim` — MIT
-- `rcarriga/nvim-notify` — MIT
-- `nvim-lualine/lualine.nvim` — MIT
+- `j-hui/fidget.nvim` — MIT
+- `stevearc/dressing.nvim` — MIT
+
+**Code intelligence**
+- `nvim-treesitter/nvim-treesitter` — Apache-2.0
+- `kevinhwang91/nvim-ufo` — MIT
+- `stevearc/aerial.nvim` — MIT
+- `folke/trouble.nvim` — Apache-2.0
 - `stevearc/conform.nvim` — MIT
+- `mfussenegger/nvim-lint` — MIT
+- `windwp/nvim-autopairs` — MIT
+- `supermaven-inc/supermaven-nvim` — MIT *(AI completion)*
+
+**Git**
+- `tpope/vim-fugitive` — Vim *(same as Vim license)*
+- `lewis6991/gitsigns.nvim` — MIT
+
+**Debugging**
+- `mfussenegger/nvim-dap` — MIT
+- `rcarriga/nvim-dap-ui` — MIT
+- `nvim-neotest/nvim-nio` — MIT
+- `theHamsta/nvim-dap-virtual-text` — MIT
+
+**Other**
+- `folke/which-key.nvim` — Apache-2.0
+- `akinsho/toggleterm.nvim` — GPL-3.0
+- `mbbill/undotree` — GPL-2.0
+- `Isrothy/neominimap.nvim` — MIT
 
 ## Prerequisites
 
 ### Required
 
-- **Neovim v0.11+** - The configuration uses Neovim v0.11 native LSP API
-- **Git** - Required for plugin management and git features
-- **Node.js and npm** - Required for TypeScript/JavaScript language server
-  ```bash
-  npm install -g typescript-language-server typescript
-  ```
+- **Neovim v0.11+** — uses the native LSP API
+- **Git** — required for plugin management
+- **A Nerd Font** — required for icons in the file tree and statusline (e.g. `font-jetbrains-mono-nerd-font` via Homebrew)
+- **Node.js / npm** — required for most language servers
 
-### Optional (for full functionality)
+### Language servers
 
-- **Language Servers** - Install the language servers you need:
+Install the servers for the languages you use:
 
-  - **TypeScript/JavaScript**: `typescript-language-server` (see above)
-  - **Python**:
-    ```bash
-    npm install -g pyright
-    ```
-  - **HTML + CSS** (bundled together):
-    ```bash
-    npm install -g vscode-langservers-extracted
-    ```
-  - **Svelte**:
-    ```bash
-    npm install -g svelte-language-server
-    ```
-  - **Go**: `gopls` - `go install golang.org/x/tools/gopls@latest`
-  - **Java**: `jdtls` - `brew install jdtls`
-  - **Kotlin**: `kotlin-language-server` - Install via your package manager
-  - **XML**: `lemminx` - Download binary from [GitHub releases](https://github.com/eclipse/lemminx/releases) and place it in your PATH
-
-- **Tree-sitter CLI** (optional but recommended) - For better syntax highlighting
-
-  ```bash
-  # macOS
-  brew install tree-sitter
-
-  # Or install via npm
-  npm install -g tree-sitter-cli
-  ```
+| Language | Install |
+|----------|---------|
+| TypeScript / JavaScript | `npm i -g typescript-language-server typescript` |
+| Python | `npm i -g pyright` |
+| HTML + CSS | `npm i -g vscode-langservers-extracted` |
+| Svelte | `npm i -g svelte-language-server` |
+| Go | `go install golang.org/x/tools/gopls@latest` |
+| Java | `brew install jdtls` |
+| Kotlin | `brew install kotlin-language-server` |
+| XML | Download `lemminx` binary and place in `$PATH` |
+| Spring Boot | `brew install spring-boot` *(optional)* |
 
 ## Installation
 
-1. Clone or copy this configuration to your Neovim config directory:
+```bash
+# Clone to Neovim config directory
+git clone <repo> ~/.config/nvim
 
-   ```bash
-   # On macOS/Linux
-   cp -r nvim ~/.config/
+# Open Neovim — lazy.nvim bootstraps itself and installs all plugins
+nvim
 
-   # Or if you're already in the config directory
-   # The structure should be: ~/.config/nvim/
-   ```
-
-2. Open Neovim:
-
-   ```bash
-   nvim
-   ```
-
-3. Install plugins:
-
-   ```vim
-   :PackerSync
-   ```
-
-4. Install language servers as needed (see Prerequisites above)
+# Inside Neovim, if anything is missing:
+:Lazy sync
+```
 
 ## Features
 
-### 🎨 Appearance
+### Appearance
 
-- **Rose Pine** colorscheme with auto dark/light mode detection (default)
-- **OneDark** colorscheme (optional alternative)
-  - Switch to OneDark: `:colorscheme onedark`
-  - Switch back to Rose Pine: `:colorscheme rose-pine`
-- **Lualine** status bar showing:
-  - Current mode
-  - Git branch and diff status
-  - LSP diagnostics
-  - File information (encoding, format, type)
-  - Cursor position
-- **Indent guides** for better code structure visualization
-- **File icons** in file explorer and status bar
+- **Catppuccin Frappe** colorscheme
+- **Lualine** global statusbar with git, diagnostics, filetype
+- **Winbar breadcrumbs** showing current symbol path (`Class > method`)
+- **Neo-tree** file explorer with git status icons
+- **Indent guides** (thin `▏` character, scope-aware)
+- **Smooth scrolling** with quadratic easing
+- **Scrollbar** with git hunk and diagnostic markers
+- **Inline color preview** for CSS/hex/HSL/Tailwind values
+- **Noice** floating command palette and LSP doc borders
+- **Tiny inline diagnostics** shown as styled blocks below error lines
+- **TODO highlights** — `TODO`, `FIXME`, `HACK`, `NOTE`, `PERF` get colored badges
+- **Word occurrence highlighting** — all instances of symbol under cursor highlighted
+- **Minimap** in the top-right corner
 
-### 🔍 File Navigation
+### Navigation
 
-- **Telescope** fuzzy finder with:
-  - `<leader>ff` - Search text in files (live grep)
-  - `<leader>pf` - Find files (searches from project directory)
-  - `<leader>pg` - Git files
-  - `<leader>pws` / `<leader>sw` - Search word under cursor
-  - `<leader>pWs` - Search WORD under cursor
-  - `<leader>ps` - Interactive grep search
-  - `<leader>vh` - Help tags
-- **nvim-tree** file explorer:
-  - `<leader>e` - Toggle file explorer
-- **Netrw** file explorer:
-  - `<leader>pv` - Open file explorer
+- **Telescope** fuzzy finder for files, text, buffers, LSP symbols
+- **Flash** for jump-to-anywhere motion
+- **Aerial** symbols outline panel
 
-### 💻 Code Intelligence
+### Code Intelligence
 
-- **LSP (Language Server Protocol)** support for:
-  - TypeScript/JavaScript/React (ts_ls)
-  - Go (gopls)
-  - Java (jdtls)
-  - Kotlin (kotlin_language_server)
-- **LSP Keymaps**:
-  - `<leader>gd` - Go to definition
-  - `<leader>gD` - Go to declaration
-  - `K` - Hover documentation
-  - `<leader>gi` - Go to implementation
-  - `<C-k>` - Signature help
-  - `<leader>D` - Type definition
-  - `<leader>rn` - Rename symbol
-  - `<leader>,` - Code actions
-  - `gr` - Find references
-- **Diagnostics**:
-  - `<leader>.` - Show diagnostic at cursor (float)
-  - `<leader>t` - Toggle Trouble (workspace diagnostics)
-  - `<leader>df` - Trouble file diagnostics
-  - `[d` / `]d` - Jump to previous/next diagnostic
-  - `[q` / `]q` - Jump between Trouble items
-- **nvim-cmp** autocompletion with:
-  - LSP completions
-  - Buffer completions
-  - Path completions
-  - Snippet support (LuaSnip)
-- **Tree-sitter** for enhanced syntax highlighting and code parsing
+- **LSP** for TypeScript, JavaScript, Python, Go, Java, Kotlin, Svelte, HTML, CSS, XML, Spring Boot
+- **nvim-cmp** autocompletion with LSP, buffer, path, and snippet sources
+- **nvim-ufo** code folding with virtual text showing line count
+- **Treesitter** syntax highlighting and text objects
+- **Conform** formatter (Prettier and others)
+- **Trouble** diagnostics panel
+- **DAP** debugger with UI
 
-### 🔧 Code Editing
+### Git
 
-- **Auto-pairs** - Automatically pairs brackets, quotes, etc.
-- **Undotree** - Visual undo history:
-  - `<leader>u` - Toggle undotree
-
-### 📝 Git Integration
-
-- **Fugitive** - Full git integration:
-  - `:Git` - Open interactive git status buffer
-  - `:Git add %` - Stage current file
-  - `:Git commit` - Commit (opens commit message editor)
-  - `:Git push` - Push to remote
-  - `:Git pull` - Pull from remote
-  - `:Git checkout -b my-branch` - Create and switch to new branch
-  - `:Git checkout branch-name` - Switch branch
-  - `:Git log` - View commit log
-  - `:Git diff` - View unstaged changes
-  - `:Git blame` - Toggle inline blame for current file
-  - Inside `:Git` status buffer:
-    - `s` - Stage file/hunk under cursor
-    - `u` - Unstage file/hunk
-    - `cc` - Commit staged changes
-    - `=` - Toggle inline diff for file
-    - `Enter` - Open file
-
-- **Gitsigns** - Inline git blame and signs:
-  - Shows git blame information at the end of lines
-  - Visual indicators in the gutter for changes
-- **Git status** in status bar (branch name, diff status)
-
-### 🗺️ Other Features
-
-- **Minimap** - Code minimap for navigation (neominimap.nvim)
-- **Better notifications** - Enhanced notification system (nvim-notify)
+- **Fugitive** for full git operations
+- **Gitsigns** for inline blame and gutter indicators
+- **Lazygit** floating terminal integration
 
 ## Keymaps
 
 Leader key: `<Space>`
+
+### Buffers
+
+| Key | Action |
+|-----|--------|
+| `<S-h>` | Previous buffer |
+| `<S-l>` | Next buffer |
+| `<leader>bd` | Close buffer |
+| `<leader>bb` | Switch buffers (Telescope) |
 
 ### Windows
 
@@ -208,36 +172,26 @@ Leader key: `<Space>`
 | `<leader><Up>` | Move to upper window |
 | `<leader><Down>` | Move to lower window |
 
-### File Explorer
+### File Explorer & Navigation
 
 | Key | Action |
 |-----|--------|
-| `<leader>pv` | Open netrw file explorer |
-| `<leader>e` | Toggle nvim-tree file explorer |
+| `<leader>e` | Toggle Neo-tree file explorer |
+| `<leader>pv` | Open netrw (built-in) |
+| `<leader>o` | Toggle Aerial symbols outline |
 
-### Search & Navigation (Telescope)
+### Search (Telescope)
 
 | Key | Action |
 |-----|--------|
-| `<leader>ff` | Live grep (search text in files) |
-| `<leader>pf` | Find files |
+| `<leader>ff` | Live grep (text in files) |
+| `<leader>pf` | Find files (from git root) |
 | `<leader>pg` | Git files |
 | `<leader>pws` / `<leader>sw` | Search word under cursor |
 | `<leader>pWs` | Search WORD under cursor |
-| `<leader>ps` | Interactive grep search |
-| `<leader>bb` | Switch buffers |
+| `<leader>ps` | Interactive grep |
 | `<leader>vh` | Help tags |
-
-### Buffers
-
-| Key | Action |
-|-----|--------|
-| `<S-h>` | Previous buffer |
-| `<S-l>` | Next buffer |
-| `<leader>1`–`<leader>9` | Jump to buffer by position |
-| `<leader>bd` | Close buffer |
-| `<leader>bp` | Pin buffer |
-| `<leader>bP` | Close all unpinned buffers |
+| `<leader>ft` | Search TODOs |
 
 ### LSP
 
@@ -253,18 +207,17 @@ Leader key: `<Space>`
 | `<C-k>` | Signature help |
 | `<leader>rn` | Rename symbol |
 | `<leader>,` | Code action (normal & visual) |
-| `<leader>f` | Format buffer |
 
-**Telescope LSP pickers** (always available, even without an active LSP session):
+**Telescope LSP pickers:**
 
 | Key | Action |
 |-----|--------|
-| `<leader>lr` | LSP references |
-| `<leader>ld` | LSP definitions |
-| `<leader>li` | LSP implementations |
-| `<leader>lt` | LSP type definitions |
-| `<leader>ls` | LSP document symbols |
-| `<leader>lS` | LSP workspace symbols |
+| `<leader>lr` / `<leader>ll` | References |
+| `<leader>ld` | Definitions |
+| `<leader>li` | Implementations |
+| `<leader>lt` | Type definitions |
+| `<leader>ls` | Document symbols |
+| `<leader>lS` | Workspace symbols |
 
 ### Diagnostics & Trouble
 
@@ -272,34 +225,37 @@ Leader key: `<Space>`
 |-----|--------|
 | `<leader>.` | Show diagnostic float at cursor |
 | `[d` / `]d` | Previous / next diagnostic |
-| `<leader>t` | Toggle Trouble (workspace diagnostics) |
-| `<leader>dq` | Toggle Trouble workspace diagnostics |
-| `<leader>df` | Toggle Trouble file diagnostics |
-| `<leader>ds` | Toggle Trouble document symbols |
-| `<leader>dl` | Toggle Trouble location list |
-| `<leader>dx` | Toggle Trouble quickfix |
-| `[q` / `]q` | Previous / next Trouble item |
+| `<leader>dq` | Open diagnostics list |
+
+### Code Folding
+
+| Key | Action |
+|-----|--------|
+| `zR` | Open all folds |
+| `zM` | Close all folds |
+| `zr` | Open folds except kinds |
+| `zm` | Close folds with level |
 
 ### Formatting & Linting
 
 | Key | Action |
 |-----|--------|
-| `<leader>f` | Format code (normal & visual, via conform.nvim) |
+| `<leader>f` | Format (normal & visual, via conform) |
 | `<leader>cl` | Run linter manually |
 
 ### Git
 
 | Key | Action |
 |-----|--------|
-| `<leader>gg` | Toggle Lazygit floating window |
+| `<leader>gg` | Toggle Lazygit |
 
-Fugitive commands are invoked via `:Git <subcommand>` (`:Git`, `:Git commit`, `:Git push`, etc.).
+Fugitive via `:Git <subcommand>` (`:Git commit`, `:Git push`, etc.)
 
 ### Debugging (DAP)
 
 | Key | Action |
 |-----|--------|
-| `<leader>dc` | Continue / start session |
+| `<leader>dc` | Continue / start |
 | `<leader>di` | Step into |
 | `<leader>dn` | Step over |
 | `<leader>dO` | Step out |
@@ -327,29 +283,18 @@ Fugitive commands are invoked via `:Git <subcommand>` (`:Git`, `:Git commit`, `:
 | `R` | o/x | Treesitter search |
 | `<C-s>` | c | Toggle flash in `/` search |
 
-### Sessions
-
-| Key | Action |
-|-----|--------|
-| `<leader>qs` | Restore session for cwd |
-| `<leader>qS` | Select session to restore |
-| `<leader>ql` | Restore last session |
-| `<leader>qw` | Save session now |
-| `<leader>qd` | Stop auto-saving session |
-
 ### Editing
 
 | Key | Action |
 |-----|--------|
 | `<leader>u` | Toggle undotree |
-| `<leader>o` | Toggle file outline (Aerial) |
 | `<leader>p` *(visual)* | Paste without overwriting register |
 
 ### Completion (insert mode)
 
 | Key | Action |
 |-----|--------|
-| `<Tab>` / `<S-Tab>` | Next / previous completion item or snippet jump |
+| `<Tab>` / `<S-Tab>` | Next / previous item or snippet jump |
 | `<CR>` | Confirm completion |
 | `<C-Space>` | Trigger completion |
 | `<C-e>` | Abort completion |
@@ -359,44 +304,55 @@ Fugitive commands are invoked via `:Git <subcommand>` (`:Git`, `:Git commit`, `:
 
 ```
 nvim/
-├── init.lua                 # Main entry point
+├── init.lua                          # Entry point
 ├── lua/
-│   ├── plugins.lua          # Plugin definitions (Packer)
+│   ├── plugins.lua                   # Plugin definitions (lazy.nvim)
 │   └── config/
-│       ├── keymaps.lua      # Key mappings
-│       ├── set.lua          # Neovim settings
-│       ├── lsp.lua          # LSP configuration
-│       ├── telescope.lua   # Telescope (fuzzy finder) config
-│       ├── treesitter.lua   # Tree-sitter config
-│       ├── cmp.lua          # Autocompletion config
-│       ├── nvim-tree.lua    # File explorer config
-│       ├── autopairs.lua    # Auto-pairs config
-│       ├── indent-blankline.lua  # Indent guides config
-│       ├── gitsigns.lua     # Git signs config
-│       ├── lualine.lua      # Status bar config
-│       └── notify.lua       # Notifications config
-└── README.md                # This file
+│       ├── keymaps.lua               # Key mappings
+│       ├── set.lua                   # Neovim options
+│       ├── lsp.lua                   # LSP servers and keymaps
+│       ├── telescope.lua             # Fuzzy finder
+│       ├── treesitter.lua            # Syntax highlighting
+│       ├── cmp.lua                   # Autocompletion
+│       ├── neo-tree.lua              # File explorer
+│       ├── lualine.lua               # Statusbar
+│       ├── navic.lua                 # Breadcrumbs
+│       ├── noice.lua                 # Modern cmdline/messages UI
+│       ├── notify.lua                # Notifications
+│       ├── indent-blankline.lua      # Indent guides
+│       ├── ufo.lua                   # Code folding
+│       ├── neoscroll.lua             # Smooth scrolling
+│       ├── scrollbar.lua             # Scrollbar with markers
+│       ├── illuminate.lua            # Word occurrence highlighting
+│       ├── colorizer.lua             # Inline color preview
+│       ├── todo-comments.lua         # TODO/FIXME highlights
+│       ├── fidget.lua                # LSP progress spinner
+│       ├── tiny-inline-diagnostic.lua # Inline diagnostics
+│       ├── dressing.lua              # Better input/select UI
+│       ├── aerial.lua                # Symbols outline
+│       ├── gitsigns.lua              # Git gutter signs
+│       ├── autopairs.lua             # Auto-pairs
+│       ├── conform.lua               # Formatter
+│       ├── lint.lua                  # Linter
+│       ├── dap.lua                   # Debugger
+│       ├── toggleterm.lua            # Floating terminal
+│       ├── trouble.lua               # Diagnostics panel
+│       ├── flash.lua                 # Motion navigation
+│       ├── supermaven.lua            # AI completion
+│       └── which-key.lua             # Keymap hints
+└── README.md
 ```
 
 ## Troubleshooting
 
-### LSP not working
-
-- Ensure the language server is installed and in your PATH
-- Check LSP status with `:LspInfo` in a file
-- Verify your project has the necessary config files (e.g., `tsconfig.json` for TypeScript)
-
 ### Icons not showing
+Install a Nerd Font and set it in your terminal: `brew install --cask font-jetbrains-mono-nerd-font`
 
-- Ensure `nvim-web-devicons` is installed (run `:PackerSync`)
-- Use a Nerd Font in your terminal for best icon support
+### LSP not working
+- Check server is installed and in `$PATH`
+- Run `:LspInfo` inside a file to see attached servers
+- Verify project has the expected config file (e.g. `tsconfig.json`)
 
-### Plugins not loading
-
-- Run `:PackerSync` to install/update plugins
-- Restart Neovim after installing new plugins
-- Check for errors with `:checkhealth`
-
-## License
-
-This configuration is provided as-is for personal use.
+### Plugin errors
+- Run `:Lazy sync` to install/update all plugins
+- Run `:checkhealth` for a full environment report
