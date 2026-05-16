@@ -76,7 +76,12 @@ vim.lsp.config('ts_ls', {
 })
 
 -- Kotlin
+-- Force Java 21 via cmd_env: system JAVA_HOME points to Java 24 (Temurin) which
+-- breaks kotlin-language-server 1.3.13 (built for Java 21).
 vim.lsp.config('kotlin_language_server', {
+  cmd_env = {
+    JAVA_HOME = '/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home',
+  },
   settings = {
     kotlin = {
       compiler = {

@@ -63,10 +63,16 @@ require("lazy").setup({
     end,
   },
 
-  -- LSP Configuration
+  -- Mason (LSP/formatter/linter installer)
   {
     "neovim/nvim-lspconfig",
+    dependencies = {
+      { "williamboman/mason.nvim", build = ":MasonUpdate" },
+      "williamboman/mason-lspconfig.nvim",
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+    },
     config = function()
+      require("config.mason")
       require("config.lsp")
     end,
   },
