@@ -330,6 +330,16 @@ require("lazy").setup({
   },
 
 
+  -- Markdown inline rendering
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = { "markdown" },
+    config = function()
+      require("config.render-markdown")
+    end,
+  },
+
   -- Diagnostics panel
   {
     "folke/trouble.nvim",

@@ -50,3 +50,6 @@ safe_telescope_keymap('<leader>li', 'lsp_implementations', 'LSP: Implementations
 safe_telescope_keymap('<leader>lt', 'lsp_type_definitions', 'LSP: Type definitions')
 safe_telescope_keymap('<leader>ls', 'lsp_document_symbols', 'LSP: Document symbols')
 safe_telescope_keymap('<leader>lS', 'lsp_workspace_symbols', 'LSP: Workspace symbols')
+
+-- Markdown render toggle
+vim.keymap.set('n', '<leader>md', '<cmd>RenderMarkdown toggle<CR>', { desc = 'Toggle markdown render' })

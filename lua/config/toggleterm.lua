@@ -39,3 +39,18 @@ local lazygit  = Terminal:new({
 })
 
 vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end, { desc = 'Toggle lazygit' })
+
+-- uv run: run current Python file in a float terminal
+vim.keymap.set('n', '<leader>rr', function()
+  local file = vim.fn.expand('%:p')
+  local pyproject = vim.fn.findfile('pyproject.toml', vim.fn.expand('%:p:h') .. ';')
+  local dir = pyproject ~= '' and vim.fn.fnamemodify(pyproject, ':h') or vim.fn.expand('%:p:h')
+  Terminal:new({
+    cmd = 'uv run python ' .. vim.fn.shellescape(file),
+    dir = dir,
+    direction = 'float',
+    float_opts = { border = 'curved' },
+    close_on_exit = false,
+    on_open = function() vim.cmd('startinsert!') end,
+  }):toggle()
+end, { desc = 'uv run current file' })

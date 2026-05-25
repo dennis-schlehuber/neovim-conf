@@ -42,7 +42,10 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'grr', function()
     require('telescope.builtin').lsp_references()
   end, vim.tbl_extend('force', bufopts, { desc = 'Find references' }))
-  
+
+  -- Code lens (inline usage counts)
+  vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, vim.tbl_extend('force', bufopts, { desc = 'Run code lens' }))
+
 end
 
 -- Set up LspAttach autocommand to apply on_attach for all servers
@@ -51,6 +54,22 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     if client then
       on_attach(client, args.buf)
+      if client.supports_method('textDocument/codeLens') then
+        vim.lsp.codelens.refresh({ bufnr = args.buf })
+      end
+    end
+  end,
+})
+
+-- Keep code lenses fresh
+vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'BufWritePost' }, {
+  callback = function(args)
+    local clients = vim.lsp.get_clients({ bufnr = args.buf })
+    for _, client in ipairs(clients) do
+      if client.supports_method('textDocument/codeLens') then
+        vim.lsp.codelens.refresh({ bufnr = args.buf })
+        break
+      end
     end
   end,
 })
@@ -63,11 +82,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.lsp.config('ts_ls', {
   settings = {
     typescript = {
+      referencesCodeLens = { enabled = true },
+      implementationsCodeLens = { enabled = true },
       preferences = {
         includePackageJsonAutoImports = 'on',
       },
     },
     javascript = {
+      referencesCodeLens = { enabled = true },
+      implementationsCodeLens = { enabled = true },
       preferences = {
         includePackageJsonAutoImports = 'on',
       },
@@ -105,6 +128,8 @@ vim.lsp.config('jdtls', {
   cmd = jdtls_cmd,
   settings = {
     java = {
+      referencesCodeLens = { enabled = true },
+      implementationsCodeLens = { enabled = true },
       configuration = {
         updateBuildConfiguration = 'automatic',
       },
@@ -148,7 +173,19 @@ vim.lsp.config('spring_boot', {
 vim.lsp.config('svelte', {})
 
 -- Go
-vim.lsp.config('gopls', {})
+vim.lsp.config('gopls', {
+  settings = {
+    gopls = {
+      codelenses = {
+        references = true,
+        test = true,
+        tidy = true,
+        upgrade_dependency = true,
+        gc_details = false,
+      },
+    },
+  },
+})
 
 -- XML
 vim.lsp.config('lemminx', {})
@@ -161,12 +198,20 @@ vim.lsp.config('cssls', {})
 
 -- Python
 vim.lsp.config('pyright', {
-  before_init = function(_, config)
-    local venv = vim.fn.finddir('.venv', vim.fn.getcwd() .. ';')
-    if venv ~= '' then
-      local python = vim.fn.resolve(venv .. '/bin/python3')
-      if vim.fn.executable(python) == 1 then
-        config.settings.python.pythonPath = python
+  on_init = function(client)
+    local root = client.config.root_dir
+    if not root then return end
+    -- Try common venv directory names
+    for _, name in ipairs({ '.venv', 'venv', 'env', '.env' }) do
+      for _, bin in ipairs({ '/bin/python3', '/bin/python' }) do
+        local python = root .. '/' .. name .. bin
+        if vim.fn.executable(python) == 1 then
+          client.config.settings = vim.tbl_deep_extend('force', client.config.settings or {}, {
+            python = { pythonPath = python },
+          })
+          client.notify('workspace/didChangeConfiguration', { settings = nil })
+          return
+        end
       end
     end
   end,
