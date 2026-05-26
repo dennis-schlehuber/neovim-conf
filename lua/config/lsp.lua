@@ -126,6 +126,7 @@ end
 
 vim.lsp.config('jdtls', {
   cmd = jdtls_cmd,
+  root_markers = { 'pom.xml', 'build.gradle', 'build.gradle.kts', '.git' },
   settings = {
     java = {
       referencesCodeLens = { enabled = true },
@@ -139,6 +140,15 @@ vim.lsp.config('jdtls', {
       maven = {
         downloadSources = true,
       },
+      import = {
+        gradle = {
+          enabled = true,
+          wrapper = { enabled = true },
+        },
+        maven = {
+          enabled = true,
+        },
+      },
       -- Lombok: allow annotation processors
       autobuild = { enabled = true },
       signatureHelp = { enabled = true },
@@ -151,6 +161,14 @@ vim.lsp.config('jdtls', {
       },
     },
   },
+  -- jdtls requires a unique workspace dir per project to avoid state corruption
+  on_new_config = function(config, root_dir)
+    local project_name = vim.fn.fnamemodify(root_dir, ':t')
+    local workspace_dir = vim.fn.expand('~/.local/share/jdtls/workspaces/') .. project_name
+    config.cmd = vim.list_extend(vim.deepcopy(jdtls_cmd), {
+      '-data', workspace_dir,
+    })
+  end,
 })
 
 -- Spring Boot Language Server
