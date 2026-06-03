@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
-# install-macos.sh — installs LSP servers, formatters, linters, and ensures
-# the correct Neovim data directories exist for treesitter parsers.
+# install-macos.sh — installs runtime prerequisites and tools not managed by Mason.
+# LSP servers (ts_ls, pyright, svelte, html, cssls, gopls, jdtls,
+# kotlin-language-server, lemminx), formatters (prettier, stylua), and linters
+# (ktlint) are auto-installed by Mason on first Neovim launch.
+# This script only handles what Mason cannot: eslint, pylint, lazygit, JDK,
+# spring-boot-language-server, and lombok.jar.
 # Target OS: macOS (requires Homebrew)
 #
 # Usage:
 #   chmod +x install-macos.sh && ./install-macos.sh
 
-set -euo pipefail
+set -uo pipefail
 
 # ── Colours ──────────────────────────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
@@ -40,58 +44,23 @@ ok "Parser cache:  $NVIM_DATA/parser"
 mkdir -p "$NVIM_DATA/lazy"
 ok "Lazy data dir: $NVIM_DATA/lazy"
 
-# ── npm — LSP servers, formatters, linters ───────────────────────────────────
+# ── npm — linters and tree-sitter CLI ────────────────────────────────────────
 title "npm packages"
+# Note: ts_ls, pyright, svelte-language-server, html, cssls, prettier are
+# auto-installed by Mason on first Neovim launch.
 
 if ! has npm; then
   err "npm not found. Install Node.js (https://nodejs.org) then re-run."
-  echo "  Skipping: typescript-language-server, svelte-language-server,"
-  echo "            vscode-langservers-extracted, pyright, prettier, eslint"
+  echo "  Skipping: eslint, tree-sitter-cli"
+  echo "  Note: Mason also requires npm to install JS/TS-based language servers."
 else
   npm_global() {
     info "npm install -g $*"
-    npm install -g "$@"
+    npm install -g "$@" || warn "npm install -g $* failed — continuing"
   }
-  npm_global typescript typescript-language-server   # ts_ls  (TS/JS/React)
-  npm_global svelte-language-server                  # svelte
-  npm_global vscode-langservers-extracted            # html + cssls
-  npm_global pyright                                 # python
-  npm_global prettier                                # formatter (conform.nvim)
   npm_global eslint                                  # linter   (nvim-lint)
   npm_global tree-sitter-cli                         # treesitter parser builder
 fi
-
-# ── Go — gopls ────────────────────────────────────────────────────────────────
-title "Go packages"
-
-if ! has go; then
-  err "go not found. Install Go (https://go.dev/doc/install) then re-run."
-  echo "  Skipping: gopls"
-else
-  info "go install gopls@latest"
-  go install golang.org/x/tools/gopls@latest
-  ok "gopls"
-fi
-
-# ── Homebrew packages ─────────────────────────────────────────────────────────
-title "Homebrew packages"
-
-brew_install() {
-  local pkg="$1"
-  local bin="${2:-$1}"
-  if has "$bin"; then
-    ok "$bin already in PATH"
-  else
-    info "brew install $pkg"
-    brew install "$pkg"
-    ok "$pkg"
-  fi
-}
-
-brew_install jdtls jdtls          # Java LSP
-brew_install stylua stylua        # Lua formatter (conform.nvim)
-brew_install lazygit lazygit      # used by <leader>gg toggleterm integration
-brew_install ktlint ktlint        # Kotlin linter (nvim-lint)
 
 # ── Python — pylint ───────────────────────────────────────────────────────────
 title "Python packages"
@@ -106,65 +75,38 @@ else
     ok "pylint already in PATH"
   else
     info "$PIP install --user pylint"
-    "$PIP" install --user pylint --break-system-packages
+    "$PIP" install --user pylint --break-system-packages \
+      || warn "pylint install failed — continuing"
     ok "pylint"
   fi
 fi
 
-# ── GitHub binary downloads ───────────────────────────────────────────────────
-title "GitHub binary downloads"
+# ── Homebrew packages ─────────────────────────────────────────────────────────
+title "Homebrew packages"
 
-if ! has curl; then
-  warn "curl not found — skipping binary downloads (kotlin-language-server, lemminx)."
-  warn "Install curl, then re-run, or download manually:"
-  warn "  kotlin-language-server: https://github.com/fwcd/kotlin-language-server/releases"
-  warn "  lemminx:                https://github.com/eclipse/lemminx/releases"
+brew_install() {
+  local pkg="$1"
+  local bin="${2:-$1}"
+  if has "$bin"; then
+    ok "$bin already in PATH"
+  else
+    info "brew install $pkg"
+    brew install "$pkg" || warn "brew install $pkg failed — continuing"
+    ok "$pkg"
+  fi
+}
+
+brew_install lazygit lazygit      # used by <leader>gg toggleterm integration
+
+# ── Java runtime ──────────────────────────────────────────────────────────────
+title "Java runtime"
+# Required to run Mason-managed tools: jdtls, kotlin-language-server, ktlint
+
+if has java; then
+  ok "java $(java -version 2>&1 | head -1)"
 else
-  mkdir -p "$LOCAL_BIN"
-
-  # ── kotlin-language-server ────────────────────────────────────────────────
-  if has kotlin-language-server; then
-    ok "kotlin-language-server already in PATH"
-  else
-    info "Downloading kotlin-language-server (latest release)…"
-    KLS_VERSION=$(curl -fsSL "https://api.github.com/repos/fwcd/kotlin-language-server/releases/latest" \
-      | grep '"tag_name"' | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/')
-    KLS_URL="https://github.com/fwcd/kotlin-language-server/releases/download/${KLS_VERSION}/server.zip"
-    TMP_KLS=$(mktemp -d)
-    curl -fsSL "$KLS_URL" -o "$TMP_KLS/server.zip"
-    unzip -q "$TMP_KLS/server.zip" -d "$TMP_KLS/kls"
-    # The zip contains a bin/ directory with the launcher script
-    chmod +x "$TMP_KLS/kls/server/bin/kotlin-language-server"
-    # Install the whole server dir and symlink the launcher
-    KLS_DEST="$HOME/.local/share/kotlin-language-server"
-    rm -rf "$KLS_DEST"
-    mv "$TMP_KLS/kls/server" "$KLS_DEST"
-    ln -sf "$KLS_DEST/bin/kotlin-language-server" "$LOCAL_BIN/kotlin-language-server"
-    rm -rf "$TMP_KLS"
-    ok "kotlin-language-server → $LOCAL_BIN/kotlin-language-server"
-  fi
-
-  # ── lemminx (XML LSP) ─────────────────────────────────────────────────────
-  if has lemminx; then
-    ok "lemminx already in PATH"
-  else
-    info "Downloading lemminx (latest release)…"
-    LEMMINX_VERSION=$(curl -fsSL "https://api.github.com/repos/redhat-developer/vscode-xml/releases/latest" \
-      | grep '"tag_name"' | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/')
-    LEMMINX_URL="https://github.com/redhat-developer/vscode-xml/releases/download/${LEMMINX_VERSION}/lemminx-osx-x86_64.zip"
-    # Apple Silicon fallback
-    if [[ "$(uname -m)" == "arm64" ]]; then
-      LEMMINX_URL="https://github.com/redhat-developer/vscode-xml/releases/download/${LEMMINX_VERSION}/lemminx-osx-aarch_64.zip"
-    fi
-    TMP_LX=$(mktemp -d)
-    curl -fsSL "$LEMMINX_URL" -o "$TMP_LX/lemminx.zip"
-    unzip -q "$TMP_LX/lemminx.zip" -d "$TMP_LX/lemminx"
-    LEMMINX_BIN=$(find "$TMP_LX/lemminx" -type f -name "lemminx*" | head -1)
-    chmod +x "$LEMMINX_BIN"
-    mv "$LEMMINX_BIN" "$LOCAL_BIN/lemminx"
-    rm -rf "$TMP_LX"
-    ok "lemminx → $LOCAL_BIN/lemminx"
-  fi
+  warn "java not found. Mason-managed tools (jdtls, kotlin-language-server, ktlint) require a JDK."
+  warn "Install with: brew install --cask temurin"
 fi
 
 # ── Java / Kotlin — Spring Boot + Lombok ─────────────────────────────────────
@@ -179,8 +121,9 @@ if [[ -f "$LOMBOK_JAR" ]]; then
   ok "lombok.jar already present: $LOMBOK_JAR"
 else
   info "Downloading lombok.jar…"
-  curl -fsSL "https://projectlombok.org/downloads/lombok.jar" -o "$LOMBOK_JAR"
-  ok "lombok.jar → $LOMBOK_JAR"
+  curl -fsSL "https://projectlombok.org/downloads/lombok.jar" -o "$LOMBOK_JAR" \
+    || warn "lombok.jar download failed — continuing"
+  [[ -f "$LOMBOK_JAR" ]] && ok "lombok.jar → $LOMBOK_JAR"
 fi
 
 # spring-boot-language-server — Spring Boot LSP (extracted from STS4 .vsix)
@@ -195,24 +138,30 @@ else
   info "Downloading spring-boot-language-server (from STS4 .vsix)…"
   VSIX_URL=$(curl -fsSL "https://api.github.com/repos/spring-projects/sts4/releases/latest" \
     | grep '"browser_download_url"' | grep '\.vsix' | head -1 \
-    | sed 's/.*"browser_download_url": *"\([^"]*\)".*/\1/')
-  TMP_STS=$(mktemp -d)
-  curl -fsSL "$VSIX_URL" -o "$TMP_STS/spring-boot.vsix"
-  unzip -q "$TMP_STS/spring-boot.vsix" -d "$TMP_STS/vsix"
-  SB_JAR=$(find "$TMP_STS/vsix" -name "spring-boot-language-server.jar" | head -1)
-  if [[ -z "$SB_JAR" ]]; then
-    err "Could not locate spring-boot-language-server.jar inside the vsix."
-    rm -rf "$TMP_STS"
-  else
-    mkdir -p "$SPRING_BOOT_DIR"
-    cp "$SB_JAR" "$SPRING_BOOT_DIR/spring-boot-language-server.jar"
-    rm -rf "$TMP_STS"
-    cat > "$SPRING_BOOT_WRAPPER" <<'WRAPPER'
+    | sed 's/.*"browser_download_url": *"\([^"]*\)".*/\1/') \
+    || { warn "Failed to fetch spring-boot-language-server release info — skipping"; VSIX_URL=""; }
+  if [[ -n "${VSIX_URL:-}" ]]; then
+    TMP_STS=$(mktemp -d)
+    curl -fsSL "$VSIX_URL" -o "$TMP_STS/spring-boot.vsix" \
+      && unzip -q "$TMP_STS/spring-boot.vsix" -d "$TMP_STS/vsix" \
+      || { warn "spring-boot-language-server download/unzip failed — skipping"; rm -rf "$TMP_STS"; VSIX_URL=""; }
+    if [[ -n "${VSIX_URL:-}" ]]; then
+      SB_JAR=$(find "$TMP_STS/vsix" -name "spring-boot-language-server.jar" | head -1)
+      if [[ -z "$SB_JAR" ]]; then
+        err "Could not locate spring-boot-language-server.jar inside the vsix."
+        rm -rf "$TMP_STS"
+      else
+        mkdir -p "$SPRING_BOOT_DIR" "$LOCAL_BIN"
+        cp "$SB_JAR" "$SPRING_BOOT_DIR/spring-boot-language-server.jar"
+        rm -rf "$TMP_STS"
+        cat > "$SPRING_BOOT_WRAPPER" <<'WRAPPER'
 #!/usr/bin/env bash
 exec java -jar "$HOME/.local/share/spring-boot-language-server/spring-boot-language-server.jar" "$@"
 WRAPPER
-    chmod +x "$SPRING_BOOT_WRAPPER"
-    ok "spring-boot-language-server → $SPRING_BOOT_WRAPPER"
+        chmod +x "$SPRING_BOOT_WRAPPER"
+        ok "spring-boot-language-server → $SPRING_BOOT_WRAPPER"
+      fi
+    fi
   fi
 fi
 
@@ -225,8 +174,11 @@ fi
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 title "Done"
-echo "  1. Open Neovim — lazy.nvim will sync plugins on first launch."
+echo "  1. Open Neovim — lazy.nvim syncs plugins, then Mason auto-installs all"
+echo "     LSP servers (ts_ls, pyright, svelte, html, cssls, gopls, jdtls,"
+echo "     kotlin-language-server, lemminx), prettier, stylua, and ktlint."
 echo "  2. Treesitter parsers install async on startup (or :TSInstall <lang>)."
 echo "  3. Check LSP status inside a file with :LspInfo."
-echo "  4. Check overall health with :checkhealth."
+echo "  4. Check Mason status with :Mason."
+echo "  5. Check overall health with :checkhealth."
 echo

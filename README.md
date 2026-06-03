@@ -2,113 +2,45 @@
 
 A modern Neovim v0.11+ configuration with LSP, fuzzy finding, git integration, and a Zed-inspired UI.
 
-## Plugins and licenses
+## Quick Start
 
-**Package manager**
-- `folke/lazy.nvim` — Apache-2.0
-
-**Appearance**
-- `catppuccin/nvim` — MIT
-- `folke/tokyonight.nvim` — MIT *(alternative)*
-- `rose-pine/neovim` — MIT *(alternative)*
-- `joshdick/onedark.vim` — MIT *(alternative)*
-- `nvim-lualine/lualine.nvim` — MIT
-- `lukas-reineke/indent-blankline.nvim` — MIT
-- `rcarriga/nvim-notify` — MIT
-- `folke/noice.nvim` — Apache-2.0
-- `MunifTanjim/nui.nvim` — MIT
-- `SmiteshP/nvim-navic` — Apache-2.0
-- `petertriho/nvim-scrollbar` — MIT
-- `rachartier/tiny-inline-diagnostic.nvim` — MIT
-- `NvChad/nvim-colorizer.lua` — MIT
-- `RRethy/vim-illuminate` — MIT
-- `folke/todo-comments.nvim` — Apache-2.0
-- `karb94/neoscroll.nvim` — MIT
-
-**File management**
-- `nvim-neo-tree/neo-tree.nvim` — MIT
-- `nvim-tree/nvim-web-devicons` — MIT
-- `nvim-lua/plenary.nvim` — MIT
-
-**Navigation**
-- `nvim-telescope/telescope.nvim` — MIT
-- `folke/flash.nvim` — Apache-2.0
-
-**LSP & completion**
-- `neovim/nvim-lspconfig` — Apache-2.0
-- `hrsh7th/nvim-cmp` — MIT
-- `hrsh7th/cmp-nvim-lsp` — MIT
-- `hrsh7th/cmp-buffer` — MIT
-- `hrsh7th/cmp-path` — MIT
-- `hrsh7th/cmp-cmdline` — MIT
-- `L3MON4D3/LuaSnip` — Apache-2.0
-- `saadparwaiz1/cmp_luasnip` — MIT
-- `j-hui/fidget.nvim` — MIT
-- `stevearc/dressing.nvim` — MIT
-
-**Code intelligence**
-- `nvim-treesitter/nvim-treesitter` — Apache-2.0
-- `kevinhwang91/nvim-ufo` — MIT
-- `stevearc/aerial.nvim` — MIT
-- `folke/trouble.nvim` — Apache-2.0
-- `stevearc/conform.nvim` — MIT
-- `mfussenegger/nvim-lint` — MIT
-- `windwp/nvim-autopairs` — MIT
-- `supermaven-inc/supermaven-nvim` — MIT *(AI completion)*
-
-**Git**
-- `tpope/vim-fugitive` — Vim *(same as Vim license)*
-- `lewis6991/gitsigns.nvim` — MIT
-
-**Debugging**
-- `mfussenegger/nvim-dap` — MIT
-- `rcarriga/nvim-dap-ui` — MIT
-- `nvim-neotest/nvim-nio` — MIT
-- `theHamsta/nvim-dap-virtual-text` — MIT
-
-**Other**
-- `folke/which-key.nvim` — Apache-2.0
-- `akinsho/toggleterm.nvim` — GPL-3.0
-- `mbbill/undotree` — GPL-2.0
-- `Isrothy/neominimap.nvim` — MIT
-
-## Prerequisites
-
-### Required
+### Requirements
 
 - **Neovim v0.11+** — uses the native LSP API
 - **Git** — required for plugin management
-- **A Nerd Font** — required for icons in the file tree and statusline (e.g. `font-jetbrains-mono-nerd-font` via Homebrew)
-- **Node.js / npm** — required for most language servers
+- **A Nerd Font** — required for icons (e.g. `brew install --cask font-jetbrains-mono-nerd-font`)
+- **Node.js / npm** — required for Mason to bootstrap JS/TS-based language servers
+- **JDK** — required for Mason-managed Java/Kotlin tools (`jdtls`, `kotlin-language-server`, `ktlint`)
+- **lazygit** — for the `<leader>gg` floating git UI
 
-### Language servers
-
-Install the servers for the languages you use:
-
-| Language | Install |
-|----------|---------|
-| TypeScript / JavaScript | `npm i -g typescript-language-server typescript` |
-| Python | `npm i -g pyright` |
-| HTML + CSS | `npm i -g vscode-langservers-extracted` |
-| Svelte | `npm i -g svelte-language-server` |
-| Go | `go install golang.org/x/tools/gopls@latest` |
-| Java | `brew install jdtls` |
-| Kotlin | `brew install kotlin-language-server` |
-| XML | Download `lemminx` binary and place in `$PATH` |
-| Spring Boot | `brew install spring-boot` *(optional)* |
-
-## Installation
+### Installation
 
 ```bash
-# Clone to Neovim config directory
 git clone <repo> ~/.config/nvim
-
-# Open Neovim — lazy.nvim bootstraps itself and installs all plugins
 nvim
-
-# Inside Neovim, if anything is missing:
-:Lazy sync
 ```
+
+On first launch, `lazy.nvim` bootstraps itself and installs all plugins. **Mason then auto-installs all LSP servers, formatters, and linters** — no manual language server setup needed. Run `:Lazy sync` or `:Mason` if anything is missing.
+
+**Run the bootstrap script** to install prerequisites that Mason cannot manage (Node.js must already be in `$PATH`):
+
+| Platform | Script |
+|----------|--------|
+| macOS | `chmod +x install-macos.sh && ./install-macos.sh` |
+| Arch Linux | `chmod +x install.sh && ./install.sh` |
+| Ubuntu | `chmod +x install-ubuntu.sh && ./install-ubuntu.sh` |
+
+The scripts install: `eslint`, `pylint`, `lazygit`, `spring-boot-language-server`, `lombok.jar`, and a JDK.
+
+### What Mason auto-installs
+
+| Category | Tools |
+|----------|-------|
+| LSP servers | `ts_ls`, `pyright`, `svelte`, `html`, `cssls`, `gopls`, `jdtls`, `kotlin_language_server`, `lemminx` |
+| Formatters | `prettier`, `stylua` |
+| Linters | `ktlint` |
+
+---
 
 ## Features
 
@@ -125,7 +57,7 @@ nvim
 - **Noice** floating command palette and LSP doc borders
 - **Tiny inline diagnostics** shown as styled blocks below error lines
 - **TODO highlights** — `TODO`, `FIXME`, `HACK`, `NOTE`, `PERF` get colored badges
-- **Word occurrence highlighting** — all instances of symbol under cursor highlighted
+- **Word occurrence highlighting** — all instances of the symbol under cursor
 - **Minimap** in the top-right corner
 
 ### Navigation
@@ -138,17 +70,19 @@ nvim
 
 - **LSP** for TypeScript, JavaScript, Python, Go, Java, Kotlin, Svelte, HTML, CSS, XML, Spring Boot
 - **nvim-cmp** autocompletion with LSP, buffer, path, and snippet sources
-- **nvim-ufo** code folding with virtual text showing line count
+- **nvim-ufo** code folding with virtual text showing fold line count
 - **Treesitter** syntax highlighting and text objects
-- **Conform** formatter (Prettier and others)
+- **Conform** formatter (Prettier and others), format-on-save
 - **Trouble** diagnostics panel
 - **DAP** debugger with UI
 
 ### Git
 
-- **Fugitive** for full git operations
+- **Fugitive** for full git operations (`:Git <subcommand>`)
 - **Gitsigns** for inline blame and gutter indicators
-- **Lazygit** floating terminal integration
+- **Lazygit** floating terminal integration (`<leader>gg`)
+
+---
 
 ## Keymaps
 
@@ -177,7 +111,7 @@ Leader key: `<Space>`
 | Key | Action |
 |-----|--------|
 | `<leader>e` | Toggle Neo-tree file explorer |
-| `<leader>pv` | Open netrw (built-in) |
+| `<leader>pv` | Open netrw (built-in explorer) |
 | `<leader>o` | Toggle Aerial symbols outline |
 
 ### Search (Telescope)
@@ -207,6 +141,7 @@ Leader key: `<Space>`
 | `<C-k>` | Signature help |
 | `<leader>rn` | Rename symbol |
 | `<leader>,` | Code action (normal & visual) |
+| `<leader>cl` | Run code lens |
 
 **Telescope LSP pickers:**
 
@@ -225,7 +160,13 @@ Leader key: `<Space>`
 |-----|--------|
 | `<leader>.` | Show diagnostic float at cursor |
 | `[d` / `]d` | Previous / next diagnostic |
-| `<leader>dq` | Open diagnostics list |
+| `<leader>dq` | Workspace diagnostics (Trouble) |
+| `<leader>t` | Toggle Trouble panel |
+| `<leader>df` | File diagnostics (Trouble) |
+| `<leader>ds` | Document symbols (Trouble) |
+| `<leader>dl` | Location list (Trouble) |
+| `<leader>dx` | Quickfix list (Trouble) |
+| `[q` / `]q` | Previous / next Trouble item |
 
 ### Code Folding
 
@@ -236,12 +177,11 @@ Leader key: `<Space>`
 | `zr` | Open folds except kinds |
 | `zm` | Close folds with level |
 
-### Formatting & Linting
+### Formatting
 
 | Key | Action |
 |-----|--------|
-| `<leader>f` | Format (normal & visual, via conform) |
-| `<leader>cl` | Run linter manually |
+| `<leader>f` | Format buffer or selection (Conform) |
 
 ### Git
 
@@ -261,6 +201,7 @@ Fugitive via `:Git <subcommand>` (`:Git commit`, `:Git push`, etc.)
 | `<leader>dO` | Step out |
 | `<leader>db` | Toggle breakpoint |
 | `<leader>dB` | Conditional breakpoint |
+| `<leader>dl` | Log point |
 | `<leader>dt` | Terminate session |
 | `<leader>dr` | Open REPL |
 | `<leader>du` | Toggle DAP UI |
@@ -270,8 +211,10 @@ Fugitive via `:Git <subcommand>` (`:Git commit`, `:Git push`, etc.)
 | Key | Action |
 |-----|--------|
 | `<C-\>` | Toggle floating terminal |
-| `<Esc>` *(terminal)* | Exit terminal mode |
-| `<C-h/j/k/l>` *(terminal)* | Navigate to adjacent window |
+| `<leader>gg` | Toggle Lazygit |
+| `<leader>rr` | Run current file with `uv` |
+| `<Esc>` *(terminal mode)* | Exit terminal mode |
+| `<C-h/j/k/l>` *(terminal mode)* | Navigate to adjacent window |
 
 ### Flash (Motion)
 
@@ -288,6 +231,7 @@ Fugitive via `:Git <subcommand>` (`:Git commit`, `:Git push`, etc.)
 | Key | Action |
 |-----|--------|
 | `<leader>u` | Toggle undotree |
+| `<leader>md` | Toggle markdown render |
 | `<leader>p` *(visual)* | Paste without overwriting register |
 
 ### Completion (insert mode)
@@ -300,58 +244,148 @@ Fugitive via `:Git <subcommand>` (`:Git commit`, `:Git push`, etc.)
 | `<C-e>` | Abort completion |
 | `<C-b>` / `<C-f>` | Scroll docs up / down |
 
+---
+
+## Plugin List
+
+**Package manager**
+- `folke/lazy.nvim` — Apache-2.0
+
+**LSP & Mason**
+- `neovim/nvim-lspconfig` — Apache-2.0
+- `williamboman/mason.nvim` — Apache-2.0
+- `williamboman/mason-lspconfig.nvim` — Apache-2.0
+- `WhoIsSethDaniel/mason-tool-installer.nvim` — MIT
+
+**Completion**
+- `hrsh7th/nvim-cmp` — MIT
+- `hrsh7th/cmp-nvim-lsp` — MIT
+- `hrsh7th/cmp-buffer` — MIT
+- `hrsh7th/cmp-path` — MIT
+- `hrsh7th/cmp-cmdline` — MIT
+- `L3MON4D3/LuaSnip` — Apache-2.0
+- `saadparwaiz1/cmp_luasnip` — MIT
+- `supermaven-inc/supermaven-nvim` — MIT *(AI completion)*
+
+**Appearance**
+- `catppuccin/nvim` — MIT
+- `folke/tokyonight.nvim` — MIT *(alternative)*
+- `rose-pine/neovim` — MIT *(alternative)*
+- `joshdick/onedark.vim` — MIT *(alternative)*
+- `nvim-lualine/lualine.nvim` — MIT
+- `lukas-reineke/indent-blankline.nvim` — MIT
+- `rcarriga/nvim-notify` — MIT
+- `folke/noice.nvim` — Apache-2.0
+- `MunifTanjim/nui.nvim` — MIT
+- `SmiteshP/nvim-navic` — Apache-2.0
+- `petertriho/nvim-scrollbar` — MIT
+- `rachartier/tiny-inline-diagnostic.nvim` — MIT
+- `NvChad/nvim-colorizer.lua` — MIT
+- `RRethy/vim-illuminate` — MIT
+- `folke/todo-comments.nvim` — Apache-2.0
+- `karb94/neoscroll.nvim` — MIT
+- `Isrothy/neominimap.nvim` — MIT
+
+**File management**
+- `nvim-neo-tree/neo-tree.nvim` — MIT
+- `nvim-tree/nvim-web-devicons` — MIT
+- `nvim-lua/plenary.nvim` — MIT
+
+**Navigation**
+- `nvim-telescope/telescope.nvim` — MIT
+- `folke/flash.nvim` — Apache-2.0
+
+**Code intelligence**
+- `nvim-treesitter/nvim-treesitter` — Apache-2.0
+- `kevinhwang91/nvim-ufo` — MIT
+- `stevearc/aerial.nvim` — MIT
+- `folke/trouble.nvim` — Apache-2.0
+- `stevearc/conform.nvim` — MIT
+- `mfussenegger/nvim-lint` — MIT
+- `windwp/nvim-autopairs` — MIT
+
+**Git**
+- `tpope/vim-fugitive` — Vim
+- `lewis6991/gitsigns.nvim` — MIT
+
+**Debugging**
+- `mfussenegger/nvim-dap` — MIT
+- `rcarriga/nvim-dap-ui` — MIT
+- `nvim-neotest/nvim-nio` — MIT
+- `theHamsta/nvim-dap-virtual-text` — MIT
+
+**UI utilities**
+- `j-hui/fidget.nvim` — MIT
+- `stevearc/dressing.nvim` — MIT
+- `folke/which-key.nvim` — Apache-2.0
+- `akinsho/toggleterm.nvim` — GPL-3.0
+- `mbbill/undotree` — GPL-2.0
+
+---
+
 ## Configuration Structure
 
 ```
 nvim/
 ├── init.lua                          # Entry point
-├── lua/
-│   ├── plugins.lua                   # Plugin definitions (lazy.nvim)
-│   └── config/
-│       ├── keymaps.lua               # Key mappings
-│       ├── set.lua                   # Neovim options
-│       ├── lsp.lua                   # LSP servers and keymaps
-│       ├── telescope.lua             # Fuzzy finder
-│       ├── treesitter.lua            # Syntax highlighting
-│       ├── cmp.lua                   # Autocompletion
-│       ├── neo-tree.lua              # File explorer
-│       ├── lualine.lua               # Statusbar
-│       ├── navic.lua                 # Breadcrumbs
-│       ├── noice.lua                 # Modern cmdline/messages UI
-│       ├── notify.lua                # Notifications
-│       ├── indent-blankline.lua      # Indent guides
-│       ├── ufo.lua                   # Code folding
-│       ├── neoscroll.lua             # Smooth scrolling
-│       ├── scrollbar.lua             # Scrollbar with markers
-│       ├── illuminate.lua            # Word occurrence highlighting
-│       ├── colorizer.lua             # Inline color preview
-│       ├── todo-comments.lua         # TODO/FIXME highlights
-│       ├── fidget.lua                # LSP progress spinner
-│       ├── tiny-inline-diagnostic.lua # Inline diagnostics
-│       ├── dressing.lua              # Better input/select UI
-│       ├── aerial.lua                # Symbols outline
-│       ├── gitsigns.lua              # Git gutter signs
-│       ├── autopairs.lua             # Auto-pairs
-│       ├── conform.lua               # Formatter
-│       ├── lint.lua                  # Linter
-│       ├── dap.lua                   # Debugger
-│       ├── toggleterm.lua            # Floating terminal
-│       ├── trouble.lua               # Diagnostics panel
-│       ├── flash.lua                 # Motion navigation
-│       ├── supermaven.lua            # AI completion
-│       └── which-key.lua             # Keymap hints
-└── README.md
+├── install-macos.sh                  # Bootstrap script (macOS)
+├── install.sh                        # Bootstrap script (Arch Linux)
+├── install-ubuntu.sh                 # Bootstrap script (Ubuntu)
+└── lua/
+    ├── plugins.lua                   # Plugin definitions (lazy.nvim)
+    └── config/
+        ├── mason.lua                 # Mason: auto-install LSP servers + tools
+        ├── keymaps.lua               # Key mappings
+        ├── set.lua                   # Neovim options
+        ├── lsp.lua                   # LSP attach callbacks and keymaps
+        ├── telescope.lua             # Fuzzy finder
+        ├── treesitter.lua            # Syntax highlighting
+        ├── cmp.lua                   # Autocompletion
+        ├── neo-tree.lua              # File explorer
+        ├── lualine.lua               # Statusbar
+        ├── navic.lua                 # Breadcrumbs
+        ├── noice.lua                 # Modern cmdline/messages UI
+        ├── notify.lua                # Notifications
+        ├── indent-blankline.lua      # Indent guides
+        ├── ufo.lua                   # Code folding
+        ├── neoscroll.lua             # Smooth scrolling
+        ├── scrollbar.lua             # Scrollbar with markers
+        ├── illuminate.lua            # Word occurrence highlighting
+        ├── colorizer.lua             # Inline color preview
+        ├── todo-comments.lua         # TODO/FIXME highlights
+        ├── fidget.lua                # LSP progress spinner
+        ├── tiny-inline-diagnostic.lua # Inline diagnostics
+        ├── dressing.lua              # Better input/select UI
+        ├── aerial.lua                # Symbols outline
+        ├── gitsigns.lua              # Git gutter signs
+        ├── autopairs.lua             # Auto-pairs
+        ├── conform.lua               # Formatter (format-on-save)
+        ├── lint.lua                  # Linter (eslint, pylint, ktlint)
+        ├── dap.lua                   # Debugger
+        ├── toggleterm.lua            # Floating terminal + Lazygit
+        ├── trouble.lua               # Diagnostics panel
+        ├── flash.lua                 # Motion navigation
+        ├── supermaven.lua            # AI completion
+        └── which-key.lua             # Keymap hints
 ```
+
+---
 
 ## Troubleshooting
 
 ### Icons not showing
-Install a Nerd Font and set it in your terminal: `brew install --cask font-jetbrains-mono-nerd-font`
+Install a Nerd Font and set it in your terminal:
+```bash
+brew install --cask font-jetbrains-mono-nerd-font
+```
 
 ### LSP not working
-- Check server is installed and in `$PATH`
+- Run `:Mason` to check if the server is installed (Mason auto-installs on first launch)
 - Run `:LspInfo` inside a file to see attached servers
-- Verify project has the expected config file (e.g. `tsconfig.json`)
+- Verify the project has the expected config file (e.g. `tsconfig.json`)
+
+### Java/Kotlin LSP not working
+Ensure a JDK is installed and `java` is in `$PATH`. Mason-managed tools (`jdtls`, `kotlin_language_server`, `ktlint`) require a JVM at runtime.
 
 ### Plugin errors
 - Run `:Lazy sync` to install/update all plugins
