@@ -33,4 +33,4 @@ vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufReadPost', 'InsertLeave' }, {
 })
 
 -- Manual lint trigger
-vim.keymap.set('n', '<leader>cl', function() lint.try_lint() end, { desc = 'Lint: Run linter' })
+vim.keymap.set('n', '<leader>ln', function() lint.try_lint() end, { desc = 'Lint: Run linter' })

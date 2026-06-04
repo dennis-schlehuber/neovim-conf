@@ -63,6 +63,16 @@ require("lazy").setup({
     end,
   },
 
+  -- Project-wide search and replace
+  {
+    "nvim-pack/nvim-spectre",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = "Spectre",
+    config = function()
+      require("config.spectre")
+    end,
+  },
+
   -- Mason (LSP/formatter/linter installer)
   {
     "neovim/nvim-lspconfig",
