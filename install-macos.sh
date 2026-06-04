@@ -4,7 +4,8 @@
 # kotlin-language-server, lemminx), formatters (prettier, stylua), and linters
 # (ktlint) are auto-installed by Mason on first Neovim launch.
 # This script only handles what Mason cannot: eslint, pylint, lazygit, JDK,
-# spring-boot-language-server, and lombok.jar.
+# spring-boot-language-server, lombok.jar, and google-java-format (Mason
+# download times out on the large binary — Homebrew bottle is faster).
 # Target OS: macOS (requires Homebrew)
 #
 # Usage:
@@ -96,7 +97,8 @@ brew_install() {
   fi
 }
 
-brew_install lazygit lazygit      # used by <leader>gg toggleterm integration
+brew_install lazygit lazygit             # used by <leader>gg toggleterm integration
+brew_install google-java-format google-java-format  # Java formatter (Mason download too slow)
 
 # ── Java runtime ──────────────────────────────────────────────────────────────
 title "Java runtime"

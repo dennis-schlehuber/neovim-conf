@@ -10,7 +10,7 @@ npairs.setup({
   ts_config = {
     lua = { 'string', 'source' },
     javascript = { 'string', 'template_string' },
-    java = false,
+    java = { 'string' },
   },
   disable_filetype = { 'TelescopePrompt', 'vim' },
   fast_wrap = {

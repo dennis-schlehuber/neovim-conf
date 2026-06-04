@@ -116,60 +116,7 @@ vim.lsp.config('kotlin_language_server', {
   },
 })
 
--- Java
-local lombok_jar = vim.fn.expand('~/.local/share/jdtls/lombok.jar')
-local jdtls_cmd = { 'jdtls' }
-if vim.fn.filereadable(lombok_jar) == 1 then
-  table.insert(jdtls_cmd, '--jvm-arg=-javaagent:' .. lombok_jar)
-  table.insert(jdtls_cmd, '--jvm-arg=-Xbootclasspath/a:' .. lombok_jar)
-end
-
-vim.lsp.config('jdtls', {
-  cmd = jdtls_cmd,
-  root_markers = { 'pom.xml', 'build.gradle', 'build.gradle.kts', '.git' },
-  settings = {
-    java = {
-      referencesCodeLens = { enabled = true },
-      implementationsCodeLens = { enabled = true },
-      configuration = {
-        updateBuildConfiguration = 'automatic',
-      },
-      eclipse = {
-        downloadSources = true,
-      },
-      maven = {
-        downloadSources = true,
-      },
-      import = {
-        gradle = {
-          enabled = true,
-          wrapper = { enabled = true },
-        },
-        maven = {
-          enabled = true,
-        },
-      },
-      -- Lombok: allow annotation processors
-      autobuild = { enabled = true },
-      signatureHelp = { enabled = true },
-      contentProvider = { preferred = 'fernflower' },
-      sources = {
-        organizeImports = {
-          starThreshold = 9999,
-          staticStarThreshold = 9999,
-        },
-      },
-    },
-  },
-  -- jdtls requires a unique workspace dir per project to avoid state corruption
-  on_new_config = function(config, root_dir)
-    local project_name = vim.fn.fnamemodify(root_dir, ':t')
-    local workspace_dir = vim.fn.expand('~/.local/share/jdtls/workspaces/') .. project_name
-    config.cmd = vim.list_extend(vim.deepcopy(jdtls_cmd), {
-      '-data', workspace_dir,
-    })
-  end,
-})
+-- Java (jdtls) is managed by nvim-jdtls via after/ftplugin/java.lua
 
 -- Spring Boot Language Server
 vim.lsp.config('spring_boot', {
@@ -247,7 +194,7 @@ vim.lsp.config('pyright', {
 -- These will auto-start when you open files of the appropriate type
 vim.lsp.enable('ts_ls')                   -- TypeScript/JavaScript/React
 vim.lsp.enable('kotlin_language_server')  -- Kotlin
-vim.lsp.enable('jdtls')                   -- Java (with Lombok)
+-- jdtls is started by after/ftplugin/java.lua via nvim-jdtls
 vim.lsp.enable('spring_boot')             -- Spring Boot (Java/Kotlin)
 vim.lsp.enable('svelte')                  -- Svelte
 vim.lsp.enable('gopls')                   -- Go

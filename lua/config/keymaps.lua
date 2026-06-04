@@ -13,6 +13,10 @@ vim.keymap.set('n', '<leader><Right>', '<C-w>l', { desc = 'Move to right window'
 vim.keymap.set('n', '<leader><Up>', '<C-w>k', { desc = 'Move to upper window' })
 vim.keymap.set('n', '<leader><Down>', '<C-w>j', { desc = 'Move to lower window' })
 
+-- Split current file to the right; close with <leader>fc
+vim.keymap.set('n', '<leader>fo', '<cmd>vsplit<CR><C-w>l', { desc = 'Window: Open current file in right split' })
+vim.keymap.set('n', '<leader>fc', '<cmd>close<CR>', { desc = 'Window: Close current split' })
+
 -- File explorer
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Open file explorer" })
 

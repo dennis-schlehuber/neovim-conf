@@ -27,7 +27,7 @@ require('nvim-navic').setup({
     Operator      = '󰆕 ',
     TypeParameter = '󰊄 ',
   },
-  lsp = { auto_attach = true },
+  lsp = { auto_attach = true, preference = { 'pyright' } },
   highlight = true,
   separator = '  ',
   depth_limit = 5,

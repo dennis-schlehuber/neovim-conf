@@ -304,6 +304,9 @@ require("lazy").setup({
     end,
   },
 
+  -- Java LSP extensions (refactoring, test runner, DAP integration)
+  "mfussenegger/nvim-jdtls",
+
   -- Linter
   {
     "mfussenegger/nvim-lint",

@@ -15,6 +15,9 @@ require('conform').setup({
     markdown = { 'prettier' },
     yaml = { 'prettier' },
     lua = { 'stylua' },
+    python = { 'ruff_format' },
+    java = { 'google-java-format' },
+    kotlin = { 'ktlint' },
   },
   format_on_save = {
     timeout_ms = 500,

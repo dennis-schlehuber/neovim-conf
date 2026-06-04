@@ -99,6 +99,18 @@ for _, lang in ipairs({ 'javascript', 'typescript', 'javascriptreact', 'typescri
   }
 end
 
+-- Java / Kotlin — adapter is registered by nvim-jdtls setup_dap() on first Java buffer open.
+-- Add a remote-attach config for debugging a running JVM (e.g. Spring Boot started with
+-- -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005).
+local java_configs = {
+  {
+    type = 'java', request = 'attach', name = 'Attach to JVM (5005)',
+    hostName = '127.0.0.1', port = 5005,
+  },
+}
+dap.configurations.java = java_configs
+dap.configurations.kotlin = java_configs
+
 -- Go — requires: go install github.com/go-delve/delve/cmd/dlv@latest
 dap.adapters.delve = {
   type = 'server', port = '${port}',

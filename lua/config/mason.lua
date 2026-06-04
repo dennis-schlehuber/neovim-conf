@@ -1,6 +1,9 @@
 require('mason').setup()
 
 require('mason-lspconfig').setup({
+  automatic_enable = {
+    exclude = { 'pylsp' },
+  },
   ensure_installed = {
     'ts_ls',
     'kotlin_language_server',
@@ -20,5 +23,9 @@ require('mason-tool-installer').setup({
     'prettier',
     'stylua',
     'ktlint',
+    'ruff',
+    'java-debug-adapter',
+    'java-test',
+    -- google-java-format installed via: brew install google-java-format
   },
 })
