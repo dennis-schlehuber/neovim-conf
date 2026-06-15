@@ -40,6 +40,20 @@ local lazygit  = Terminal:new({
 
 vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end, { desc = 'Toggle lazygit' })
 
+-- Project tree view
+local tree_term = Terminal:new({
+  cmd = 'tree -C -I ".git|node_modules|__pycache__|.venv" .',
+  dir = 'git_dir',
+  direction = 'float',
+  float_opts = { border = 'curved' },
+  close_on_exit = false,
+  on_open = function(term)
+    vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = term.bufnr, silent = true })
+  end,
+})
+
+vim.keymap.set('n', '<leader>T', function() tree_term:toggle() end, { desc = 'Toggle project tree' })
+
 -- uv run: run current Python file in a float terminal
 vim.keymap.set('n', '<leader>rr', function()
   local file = vim.fn.expand('%:p')
