@@ -12,7 +12,6 @@ A modern Neovim v0.11+ configuration with LSP, fuzzy finding, git integration, a
 - **Node.js / npm** — required for Mason to bootstrap JS/TS-based language servers
 - **JDK** — required for Mason-managed Java/Kotlin tools (`jdtls`, `kotlin-language-server`, `ktlint`)
 - **lazygit** — for the `<leader>gg` floating git UI
-- **tree** — for the `<leader>T` project tree view (`brew install tree`, or auto-installed via `:Lazy build system-deps`)
 
 ### Installation
 

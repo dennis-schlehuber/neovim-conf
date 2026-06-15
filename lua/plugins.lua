@@ -333,19 +333,6 @@ require("lazy").setup({
     end,
   },
 
-  -- System dependencies (re-run with :Lazy build system-deps)
-  {
-    name = "system-deps",
-    dir = vim.fn.stdpath("config"),
-    lazy = false,
-    build = function()
-      if vim.fn.executable("tree") == 0 then
-        vim.notify("Installing tree…", vim.log.levels.INFO)
-        vim.fn.system({ "brew", "install", "tree" })
-      end
-    end,
-  },
-
   -- Floating terminal + lazygit
   {
     "akinsho/toggleterm.nvim",

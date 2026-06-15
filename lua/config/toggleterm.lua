@@ -42,9 +42,87 @@ local lazygit  = Terminal:new({
 
 vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end, { desc = 'Toggle lazygit' })
 
--- Project tree sidebar
+-- Project tree sidebar (pure Lua scanner — no `tree` binary needed)
 local tree_buf = nil
 local tree_win = nil
+
+local ALWAYS_IGNORE = { ['.git']=true, ['__pycache__']=true, ['.DS_Store']=true, ['.venv']=true, ['node_modules']=true }
+
+local function read_gitignore(root)
+  local patterns = {}
+  local f = io.open(root .. '/.gitignore', 'r')
+  if not f then return patterns end
+  for line in f:lines() do
+    line = line:match('^%s*(.-)%s*$')
+    if line ~= '' and not line:match('^#') then
+      local p = line:gsub('/$',''):gsub('%.','%%.'):gsub('%*%*','\0'):gsub('%*','[^/]*'):gsub('\0','.*'):gsub('%?','.')
+      table.insert(patterns, '^'..p..'$')
+    end
+  end
+  f:close()
+  return patterns
+end
+
+local function is_ignored(name, gitignore)
+  if ALWAYS_IGNORE[name] then return true end
+  for _, pat in ipairs(gitignore) do
+    if name:match(pat) then return true end
+  end
+  return false
+end
+
+local function scan(path, gitignore)
+  local handle = vim.uv.fs_scandir(path)
+  if not handle then return {} end
+  local entries = {}
+  while true do
+    local name, ftype = vim.uv.fs_scandir_next(handle)
+    if not name then break end
+    if not is_ignored(name, gitignore) then
+      local full = path..'/'..name
+      if ftype == 'unknown' then
+        local stat = vim.uv.fs_stat(full)
+        ftype = stat and stat.type or 'file'
+      end
+      table.insert(entries, { name=name, path=full, is_dir=(ftype=='directory') })
+    end
+  end
+  table.sort(entries, function(a,b)
+    if a.is_dir ~= b.is_dir then return a.is_dir end
+    return a.name:lower() < b.name:lower()
+  end)
+  for _, e in ipairs(entries) do
+    if e.is_dir then e.children = scan(e.path, gitignore) end
+  end
+  return entries
+end
+
+local function compact(nodes)
+  local out = {}
+  for _, node in ipairs(nodes) do
+    if node.is_dir and node.children then
+      node.children = compact(node.children)
+      while #node.children == 1 and node.children[1].is_dir do
+        local child = node.children[1]
+        node = { name=node.name..'/'..child.name, path=child.path, is_dir=true, children=child.children }
+      end
+    end
+    table.insert(out, node)
+  end
+  return out
+end
+
+local function render(nodes, prefix, lines, counts)
+  for i, node in ipairs(nodes) do
+    local last = (i == #nodes)
+    table.insert(lines, prefix..(last and '└── ' or '├── ')..node.name..(node.is_dir and '/' or ''))
+    if node.is_dir then counts.dirs = counts.dirs + 1
+    else counts.files = counts.files + 1 end
+    if node.children and #node.children > 0 then
+      render(node.children, prefix..(last and '    ' or '│   '), lines, counts)
+    end
+  end
+end
 
 local function apply_tree_highlights(buf)
   vim.api.nvim_buf_call(buf, function()
@@ -53,16 +131,12 @@ local function apply_tree_highlights(buf)
       syntax match TreeHeader    /\%1l.*/
       syntax match TreeSeparator /\%2l.*/
       syntax match TreeStructure /[│├└─]/
-      syntax match TreeDir       /[^ ├└│─.]\+\/\s*$/
-      syntax match TreeSymlink   /[^ ├└│─.]\+@\s*$/
-      syntax match TreeExec      /[^ ├└│─.]\+\*\s*$/
+      syntax match TreeDir       /[^ ├└│─]\+\/\s*$/
       syntax match TreeSummary   /^\d\+ director.*/
       highlight default TreeHeader    guifg=#8caaee gui=bold
       highlight default TreeSeparator guifg=#414559
       highlight default TreeStructure guifg=#51576d
       highlight default TreeDir       guifg=#8caaee gui=bold
-      highlight default TreeSymlink   guifg=#81c8be gui=italic
-      highlight default TreeExec      guifg=#a6d189
       highlight default TreeSummary   guifg=#737994 gui=italic
     ]])
   end)
@@ -75,16 +149,19 @@ local function toggle_tree_sidebar()
     return
   end
 
-  local root = vim.fn.systemlist('git -C ' .. vim.fn.shellescape(vim.fn.getcwd()) .. ' rev-parse --show-toplevel 2>/dev/null')[1]
+  local root = vim.fn.systemlist('git -C '..vim.fn.shellescape(vim.fn.getcwd())..' rev-parse --show-toplevel 2>/dev/null')[1]
   if not root or root == '' then root = vim.fn.getcwd() end
 
-  local base_ignore = '".git|node_modules|__pycache__|.venv"'
-  local gitignore_flag = vim.fn.filereadable(root .. '/.gitignore') == 1 and ' --gitignore' or ''
-  local lines = vim.fn.systemlist('tree -F -I ' .. base_ignore .. gitignore_flag .. ' ' .. vim.fn.shellescape(root))
+  local gitignore = read_gitignore(root)
+  local nodes = compact(scan(root, gitignore))
 
-  -- Header
+  local lines, counts = {}, { dirs=0, files=0 }
+  render(nodes, '', lines, counts)
+  table.insert(lines, '')
+  table.insert(lines, counts.dirs..' directories, '..counts.files..' files')
+
   local name = vim.fn.fnamemodify(root, ':t')
-  table.insert(lines, 1, '  ' .. name)
+  table.insert(lines, 1, '  '..name)
   table.insert(lines, 2, string.rep('─', math.max(#name + 4, 30)))
 
   if not tree_buf or not vim.api.nvim_buf_is_valid(tree_buf) then
@@ -105,11 +182,8 @@ local function toggle_tree_sidebar()
   vim.bo[tree_buf].modifiable = false
   apply_tree_highlights(tree_buf)
 
-  -- Dynamic width: fit content up to a cap
   local max_len = 35
-  for _, line in ipairs(lines) do
-    max_len = math.max(max_len, #line)
-  end
+  for _, line in ipairs(lines) do max_len = math.max(max_len, #line) end
   local width = math.min(60, max_len + 2)
 
   vim.cmd('botright vsplit')
