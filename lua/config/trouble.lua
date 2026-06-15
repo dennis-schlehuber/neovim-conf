@@ -17,7 +17,7 @@ local map = function(key, cmd, desc)
   vim.keymap.set('n', key, cmd, { desc = desc, silent = true })
 end
 
-map('<leader>t',  '<cmd>Trouble diagnostics toggle<CR>',              'Trouble: Toggle')
+map('<leader>T',  '<cmd>Trouble diagnostics toggle<CR>',              'Trouble: Toggle')
 -- Replace the old <leader>dq loclist binding
 map('<leader>dq', '<cmd>Trouble diagnostics toggle<CR>',          'Trouble: Workspace diagnostics')
 map('<leader>df', '<cmd>Trouble diagnostics toggle filter.buf=0<CR>', 'Trouble: File diagnostics')

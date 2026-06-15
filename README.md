@@ -162,7 +162,7 @@ Leader key: `<Space>`
 | `<leader>.` | Show diagnostic float at cursor |
 | `[d` / `]d` | Previous / next diagnostic |
 | `<leader>dq` | Workspace diagnostics (Trouble) |
-| `<leader>t` | Toggle Trouble panel |
+| `<leader>T` | Toggle Trouble panel |
 | `<leader>df` | File diagnostics (Trouble) |
 | `<leader>ds` | Document symbols (Trouble) |
 | `<leader>dl` | Location list (Trouble) |
@@ -213,7 +213,7 @@ Fugitive via `:Git <subcommand>` (`:Git commit`, `:Git push`, etc.)
 |-----|--------|
 | `<C-\>` | Toggle floating terminal |
 | `<leader>gg` | Toggle Lazygit |
-| `<leader>T` | Toggle project tree view (`tree`) |
+| `<leader>t` | Toggle project tree view (`tree`) |
 | `<leader>rr` | Run current file with `uv` |
 | `<Esc>` *(terminal mode)* | Exit terminal mode |
 | `<C-h/j/k/l>` *(terminal mode)* | Navigate to adjacent window |
