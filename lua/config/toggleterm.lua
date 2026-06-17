@@ -184,19 +184,26 @@ local function toggle_tree_sidebar()
 
   local max_len = 35
   for _, line in ipairs(lines) do max_len = math.max(max_len, #line) end
-  local width = math.min(60, max_len + 2)
+  local width  = math.min(60, max_len + 2)
+  local height = math.min(vim.o.lines - 4, #lines + 2)
+  local row    = math.floor((vim.o.lines - height) / 2)
+  local col    = math.floor((vim.o.columns - width) / 2)
 
-  vim.cmd('botright vsplit')
-  tree_win = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_set_buf(tree_win, tree_buf)
-  vim.api.nvim_win_set_width(tree_win, width)
+  tree_win = vim.api.nvim_open_win(tree_buf, false, {
+    relative = 'editor',
+    width    = width,
+    height   = height,
+    row      = row,
+    col      = col,
+    style    = 'minimal',
+    border   = 'rounded',
+  })
   vim.wo[tree_win].number         = false
   vim.wo[tree_win].relativenumber = false
   vim.wo[tree_win].signcolumn     = 'no'
   vim.wo[tree_win].wrap           = false
   vim.wo[tree_win].list           = true
   vim.wo[tree_win].listchars      = 'extends:›,precedes:‹'
-  vim.cmd('wincmd p')
 end
 
 vim.keymap.set('n', '<leader>t', toggle_tree_sidebar, { desc = 'Toggle project tree sidebar' })
