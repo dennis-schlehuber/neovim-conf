@@ -48,7 +48,8 @@ require('neo-tree').setup({
       ['<S-o>'] = function(state)
         local node = state.tree:get_node()
         local path = node:get_id()
-        vim.fn.jobstart({ 'open', path }, { detach = true })
+        local cmd = vim.fn.has('mac') == 1 and 'open' or vim.fn.has('win32') == 1 and 'explorer' or 'xdg-open'
+        vim.fn.jobstart({ cmd, path }, { detach = true })
       end,
     },
   },

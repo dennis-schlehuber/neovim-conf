@@ -118,7 +118,7 @@ Leader key: `<Space>`
 
 | Key | Action |
 |-----|--------|
-| `<S-o>` | Open selected file or folder in Finder (macOS) |
+| `<S-o>` | Open selected file or folder in the system file manager |
 
 ### Search (Telescope)
 
