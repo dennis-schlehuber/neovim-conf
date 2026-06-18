@@ -44,6 +44,13 @@ require('neo-tree').setup({
     position = 'left',
     width = 40,
     mapping_options = { noremap = true, nowait = true },
+    mappings = {
+      ['<S-o>'] = function(state)
+        local node = state.tree:get_node()
+        local path = node:get_id()
+        vim.fn.jobstart({ 'open', path }, { detach = true })
+      end,
+    },
   },
   filesystem = {
     filtered_items = {

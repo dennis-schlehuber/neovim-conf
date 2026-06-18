@@ -114,6 +114,12 @@ Leader key: `<Space>`
 | `<leader>pv` | Open netrw (built-in explorer) |
 | `<leader>o` | Toggle Aerial symbols outline |
 
+**Neo-tree internal mappings** (press while focused in the tree):
+
+| Key | Action |
+|-----|--------|
+| `<S-o>` | Open selected file or folder in Finder (macOS) |
+
 ### Search (Telescope)
 
 | Key | Action |
