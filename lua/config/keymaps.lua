@@ -57,3 +57,6 @@ safe_telescope_keymap('<leader>lS', 'lsp_workspace_symbols', 'LSP: Workspace sym
 
 -- Markdown render toggle
 vim.keymap.set('n', '<leader>md', '<cmd>RenderMarkdown toggle<CR>', { desc = 'Toggle markdown render' })
+
+-- Project notes
+vim.keymap.set('n', '<leader>n', function() require('config.project-notes').open() end, { desc = 'Open project notes' })

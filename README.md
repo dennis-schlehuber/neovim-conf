@@ -233,6 +233,26 @@ Fugitive via `:Git <subcommand>` (`:Git commit`, `:Git push`, etc.)
 | `R` | o/x | Treesitter search |
 | `<C-s>` | c | Toggle flash in `/` search |
 
+### Project Notes
+
+| Key | Context | Action |
+|-----|---------|--------|
+| `<leader>n` | Normal | Open project notes in a floating window |
+| `<leader>h` | Inside notes | Insert file header + timestamp |
+| `q` / `<Esc>` | Inside notes (normal mode) | Save and close |
+
+Notes are stored in `~/.local/share/nvim/project-notes/` — outside the project, never committed. Each project gets its own file identified by its git root. Opening the window again always shows the same file with all previous notes intact.
+
+Pressing `<leader>h` inside the note window inserts a section header for the file that was open when you called `<leader>n`, followed by the current timestamp:
+
+```
+--- src/routes/+page.svelte ---
+2026-06-26 14:32
+
+```
+
+The file is saved automatically when the window loses focus or is closed.
+
 ### Editing
 
 | Key | Action |
@@ -373,7 +393,8 @@ nvim/
         ├── trouble.lua               # Diagnostics panel
         ├── flash.lua                 # Motion navigation
         ├── supermaven.lua            # AI completion
-        └── which-key.lua             # Keymap hints
+        ├── which-key.lua             # Keymap hints
+        └── project-notes.lua         # Project-scoped floating notes
 ```
 
 ---
