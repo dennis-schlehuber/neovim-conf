@@ -49,11 +49,12 @@ jdtls.start({
   init_options = {
     bundles = get_bundles(),
   },
-  on_attach = function(client)
-    -- Disable semantic tokens: jdtls sends @lsp.type.X.java groups which have higher
-    -- priority than treesitter extmarks and render as plain text when not themed.
-    -- Treesitter handles all Java highlighting instead.
+  on_init = function(client)
+    -- Must be in on_init, not on_attach: semantic token requests start before
+    -- on_attach fires. Clearing here means no @lsp.type.X.java groups override treesitter.
     client.server_capabilities.semanticTokensProvider = nil
+  end,
+  on_attach = function()
     jdtls.setup_dap({ hotcodereplace = 'auto' })
   end,
 })
