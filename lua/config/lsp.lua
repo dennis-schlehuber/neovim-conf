@@ -163,18 +163,18 @@ vim.lsp.config('cssls', {})
 
 -- Python
 vim.lsp.config('pyright', {
-  on_init = function(client)
-    local root = client.config.root_dir
+  -- before_init runs before pyright initializes, so pythonPath is sent on the first
+  -- initialize request instead of requiring a workspace/didChangeConfiguration roundtrip.
+  before_init = function(_, config)
+    local root = config.root_dir
     if not root then return end
-    -- Try common venv directory names
     for _, name in ipairs({ '.venv', 'venv', 'env', '.env' }) do
       for _, bin in ipairs({ '/bin/python3', '/bin/python' }) do
         local python = root .. '/' .. name .. bin
         if vim.fn.executable(python) == 1 then
-          client.config.settings = vim.tbl_deep_extend('force', client.config.settings or {}, {
+          config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
             python = { pythonPath = python },
           })
-          client.notify('workspace/didChangeConfiguration', { settings = nil })
           return
         end
       end
@@ -195,7 +195,9 @@ vim.lsp.config('pyright', {
 vim.lsp.enable('ts_ls')                   -- TypeScript/JavaScript/React
 vim.lsp.enable('kotlin_language_server')  -- Kotlin
 -- jdtls is started by after/ftplugin/java.lua via nvim-jdtls
-vim.lsp.enable('spring_boot')             -- Spring Boot (Java/Kotlin)
+if vim.fn.executable('spring-boot-language-server') == 1 then
+  vim.lsp.enable('spring_boot')           -- Spring Boot (Java/Kotlin)
+end
 vim.lsp.enable('svelte')                  -- Svelte
 vim.lsp.enable('gopls')                   -- Go
 vim.lsp.enable('lemminx')                 -- XML

@@ -5,11 +5,13 @@ local pylint = lint.linters.pylint
 table.insert(pylint.args, 1, 'pylint')
 table.insert(pylint.args, 1, '-m')
 pylint.cmd = function()
-  local venv = vim.fn.finddir('.venv', vim.fn.getcwd() .. ';')
-  if venv ~= '' then
-    local venv_python = venv .. '/bin/python3'
-    if vim.fn.executable(venv_python) == 1 then
-      return venv_python
+  for _, name in ipairs({ '.venv', 'venv', 'env', '.env' }) do
+    local venv = vim.fn.finddir(name, vim.fn.getcwd() .. ';')
+    if venv ~= '' then
+      local venv_python = venv .. '/bin/python3'
+      if vim.fn.executable(venv_python) == 1 then
+        return venv_python
+      end
     end
   end
   return 'python3'

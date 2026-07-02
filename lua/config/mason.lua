@@ -2,7 +2,9 @@ require('mason').setup()
 
 require('mason-lspconfig').setup({
   automatic_enable = {
-    exclude = { 'pylsp' },
+    -- jdtls must be excluded: it is started by nvim-jdtls (after/ftplugin/java.lua),
+    -- not by mason-lspconfig. Auto-enabling it here causes two conflicting jdtls processes.
+    exclude = { 'pylsp', 'jdtls' },
   },
   ensure_installed = {
     'ts_ls',
