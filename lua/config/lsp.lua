@@ -99,19 +99,19 @@ vim.lsp.config('ts_ls', {
 })
 
 -- Kotlin
--- Force Java 21 via cmd_env: system JAVA_HOME points to Java 24 (Temurin) which
--- breaks kotlin-language-server 1.3.13 (built for Java 21).
+-- Force Java 21: system JAVA_HOME points to Java 24 (Temurin) which breaks
+-- kotlin-language-server 1.3.13. Disable semantic tokens for the same reason as
+-- jdtls: @lsp.type.X.kotlin groups override treesitter but aren't themed.
 vim.lsp.config('kotlin_language_server', {
   cmd_env = {
     JAVA_HOME = '/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home',
   },
+  on_init = function(client)
+    client.server_capabilities.semanticTokensProvider = nil
+  end,
   settings = {
     kotlin = {
-      compiler = {
-        jvm = {
-          target = 'default',
-        },
-      },
+      compiler = { jvm = { target = 'default' } },
     },
   },
 })
