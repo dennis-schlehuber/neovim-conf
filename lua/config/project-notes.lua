@@ -1,6 +1,11 @@
 local M = {}
 
 local notes_dir = vim.fn.stdpath("data") .. "/project-notes"
+local SIGN_GROUP = "ProjectNotes"
+local SIGN_NAME  = "ProjectNotesSign"
+
+-- Register sign once
+vim.fn.sign_define(SIGN_NAME, { text = "󰎞", texthl = "DiagnosticHint" })
 
 local function get_project_root()
   local bufpath = vim.fn.expand("%:p:h")
@@ -16,8 +21,8 @@ local function sanitize_path(path)
   return path:gsub("^/", ""):gsub("/", "_") .. ".md"
 end
 
-local function get_note_path()
-  return notes_dir .. "/" .. sanitize_path(get_project_root())
+local function get_note_path(root)
+  return notes_dir .. "/" .. sanitize_path(root or get_project_root())
 end
 
 local function get_relative_path(root, filepath)
@@ -25,6 +30,54 @@ local function get_relative_path(root, filepath)
   local escaped = root:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
   return filepath:match("^" .. escaped .. "/(.+)$")
 end
+
+-- Check whether a relative path has a header in the note file
+local function has_note(note_path, rel_path)
+  local f = io.open(note_path, "r")
+  if not f then return false end
+  local pattern = "^--- " .. rel_path:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1") .. " ---$"
+  for line in f:lines() do
+    if line:match(pattern) then
+      f:close()
+      return true
+    end
+  end
+  f:close()
+  return false
+end
+
+-- Place or clear the gutter sign for a buffer
+local function refresh_sign(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  vim.fn.sign_unplace(SIGN_GROUP, { buffer = bufnr })
+
+  local filepath = vim.api.nvim_buf_get_name(bufnr)
+  if filepath == "" then return end
+
+  local root = get_project_root()
+  local rel_path = get_relative_path(root, filepath)
+  if not rel_path then return end
+
+  local note_path = get_note_path(root)
+  if has_note(note_path, rel_path) then
+    vim.fn.sign_place(0, SIGN_GROUP, SIGN_NAME, bufnr, { lnum = 1, priority = 10 })
+  end
+end
+
+-- Refresh signs for all loaded normal buffers (called after a header is inserted)
+local function refresh_all_signs()
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].buftype == "" then
+      refresh_sign(bufnr)
+    end
+  end
+end
+
+-- Auto-refresh sign on buffer entry
+vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
+  group = vim.api.nvim_create_augroup("ProjectNotesSign", { clear = true }),
+  callback = function(ev) refresh_sign(ev.buf) end,
+})
 
 -- Track open windows per note file to avoid duplicates
 local open_windows = {}
@@ -35,7 +88,7 @@ function M.open()
   local rel_path = get_relative_path(project_root, current_file)
 
   vim.fn.mkdir(notes_dir, "p")
-  local note_path = get_note_path()
+  local note_path = get_note_path(project_root)
 
   -- Focus existing window if already open
   local existing = open_windows[note_path]
@@ -71,7 +124,6 @@ function M.open()
 
   open_windows[note_path] = win
 
-  -- Go to end of file
   local line_count = vim.api.nvim_buf_line_count(bufnr)
   vim.api.nvim_win_set_cursor(win, { line_count, 0 })
 
@@ -106,7 +158,7 @@ function M.open()
     end
   end
 
-  vim.keymap.set("n", "q", close, { buffer = bufnr, nowait = true, desc = "Close notes" })
+  vim.keymap.set("n", "q",     close, { buffer = bufnr, nowait = true, desc = "Close notes" })
   vim.keymap.set("n", "<Esc>", close, { buffer = bufnr, nowait = true, desc = "Close notes" })
 
   -- Insert header for the file that was open when notes were opened
@@ -131,6 +183,10 @@ function M.open()
     vim.api.nvim_buf_set_lines(bufnr, lc, lc, false, lines)
     vim.api.nvim_win_set_cursor(win, { lc + #lines, 0 })
     vim.cmd("startinsert")
+
+    -- Immediately show the sign on the source buffer
+    save()
+    refresh_all_signs()
   end, { buffer = bufnr, nowait = true, desc = "Insert file header + timestamp" })
 end
 
