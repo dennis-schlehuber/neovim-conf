@@ -38,5 +38,9 @@ require('gitsigns').setup({
       row = 0,
       col = 1
     },
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+    vim.keymap.set('n', '<leader>gb', gs.preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+  end,
   })
-  
+
