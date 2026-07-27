@@ -99,21 +99,19 @@ vim.lsp.config('ts_ls', {
 })
 
 -- Kotlin
--- Force Java 21: system JAVA_HOME points to Java 24 (Temurin) which breaks
--- kotlin-language-server 1.3.13. Disable semantic tokens for the same reason as
--- jdtls: @lsp.type.X.kotlin groups override treesitter but aren't themed.
-vim.lsp.config('kotlin_language_server', {
-  cmd_env = {
-    JAVA_HOME = '/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home',
-  },
+-- JetBrains' official Kotlin LSP (github.com/Kotlin/kotlin-lsp). Unlike the old
+-- fwcd kotlin-language-server, it tracks modern Kotlin (2.2/2.3) and bundles its
+-- own JRE, so no JAVA_HOME override is needed. Installed via
+-- `brew install jetbrains/utils/kotlin-lsp`, which puts `kotlin-lsp` on $PATH.
+-- The nvim-lspconfig `kotlin_lsp` preset defaults cmd to `intellij-server`, but
+-- the Homebrew formula exposes the binary as `kotlin-lsp`, so override cmd.
+-- Disable semantic tokens for the same reason as jdtls: @lsp.type.X.kotlin
+-- groups override treesitter but aren't themed.
+vim.lsp.config('kotlin_lsp', {
+  cmd = { 'kotlin-lsp', '--stdio' },
   on_init = function(client)
     client.server_capabilities.semanticTokensProvider = nil
   end,
-  settings = {
-    kotlin = {
-      compiler = { jvm = { target = 'default' } },
-    },
-  },
 })
 
 -- Java (jdtls) is managed by nvim-jdtls via after/ftplugin/java.lua
@@ -193,7 +191,9 @@ vim.lsp.config('pyright', {
 -- Enable all configured language servers
 -- These will auto-start when you open files of the appropriate type
 vim.lsp.enable('ts_ls')                   -- TypeScript/JavaScript/React
-vim.lsp.enable('kotlin_language_server')  -- Kotlin
+if vim.fn.executable('kotlin-lsp') == 1 then
+  vim.lsp.enable('kotlin_lsp')            -- Kotlin (JetBrains official LSP)
+end
 -- jdtls is started by after/ftplugin/java.lua via nvim-jdtls
 if vim.fn.executable('spring-boot-language-server') == 1 then
   vim.lsp.enable('spring_boot')           -- Spring Boot (Java/Kotlin)

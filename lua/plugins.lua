@@ -343,13 +343,13 @@ require("lazy").setup({
   },
 
 
-  -- Markdown inline rendering
+  -- Task runner (build/test/run tasks; includes a custom Gradle template)
   {
-    "MeanderingProgrammer/render-markdown.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-    ft = { "markdown" },
+    "stevearc/overseer.nvim",
+    cmd = { "OverseerRun", "OverseerToggle", "OverseerQuickAction", "OverseerInfo" },
+    keys = { "<leader>rt", "<leader>ra", "<leader>rq", "<leader>ri" },
     config = function()
-      require("config.render-markdown")
+      require("config.overseer")
     end,
   },
 

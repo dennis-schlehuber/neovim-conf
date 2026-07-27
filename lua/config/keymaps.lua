@@ -55,8 +55,15 @@ safe_telescope_keymap('<leader>lt', 'lsp_type_definitions', 'LSP: Type definitio
 safe_telescope_keymap('<leader>ls', 'lsp_document_symbols', 'LSP: Document symbols')
 safe_telescope_keymap('<leader>lS', 'lsp_workspace_symbols', 'LSP: Workspace symbols')
 
--- Markdown render toggle
-vim.keymap.set('n', '<leader>md', '<cmd>RenderMarkdown toggle<CR>', { desc = 'Toggle markdown render' })
-
 -- Project notes
 vim.keymap.set('n', '<leader>n', function() require('config.project-notes').open() end, { desc = 'Open project notes' })
+
+-- Open cwd in IntelliJ IDEA
+vim.keymap.set('n', '<leader>ij', function()
+  vim.system({ vim.fn.expand('~/Library/Application Support/JetBrains/Toolbox/scripts/idea'), vim.fn.getcwd() }, { detach = true })
+end, { desc = 'Open cwd in IntelliJ IDEA' })
+
+-- Open cwd in PyCharm
+vim.keymap.set('n', '<leader>ip', function()
+  vim.system({ vim.fn.expand('~/Library/Application Support/JetBrains/Toolbox/scripts/pycharm'), vim.fn.getcwd() }, { detach = true })
+end, { desc = 'Open cwd in PyCharm' })

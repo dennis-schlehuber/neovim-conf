@@ -8,7 +8,8 @@ require('mason-lspconfig').setup({
   },
   ensure_installed = {
     'ts_ls',
-    'kotlin_language_server',
+    -- Kotlin uses JetBrains' kotlin-lsp (brew install jetbrains/utils/kotlin-lsp),
+    -- not the Mason-managed fwcd kotlin-language-server. See lua/config/lsp.lua.
     'jdtls',
     'svelte',
     'gopls',
